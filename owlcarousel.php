@@ -14,6 +14,8 @@ add_action('init', 'owlcarousel_init');
 add_action('wp_print_scripts', 'owl_register_scripts');
 add_action('wp_print_styles', 'owl_register_styles');
 add_action('widgets_init', 'owl_widgets_init');
+add_action('manage_edit-owl-carousel_columns', 'owl_columnfilter');
+add_action('manage_posts_custom_column', 'owl_column');
 
 /**
  * Initilize the plugin
@@ -70,6 +72,9 @@ function owl_register_scripts() {
     wp_enqueue_script('js.owl.carousel.script');
 }
 
+/**
+ * List of CSS files
+ */
 function owl_register_styles() {
     wp_register_style('style.owl.carousel', plugins_url('/owlcarousel/css/owl.carousel.css'));
     wp_register_style('style.owl.carousel.theme', plugins_url('/owlcarousel/css/owl.theme.css'));
@@ -145,6 +150,28 @@ class owl_Widget extends WP_Widget {
             echo $before_title . $title . $after_title;
         echo owl_function(array(category => $instance['category'], singleItem => "true", autoPlay => "true", pagination => "false"));
         echo $after_widget;
+    }
+}
+
+/**
+ * Add custom column filters in administration
+ * @param array $columns
+ */
+function owl_columnfilter($columns) {
+    $thumb = array('thumbnail' => 'Image');
+    $columns = array_slice($columns, 0, 2) + $thumb + array_slice($columns, 2, null);
+    
+    return $columns;
+}
+
+/**
+ * Add custom column contents in administration
+ * @param type $columnName
+ */
+function owl_column($columnName) {
+    global $post;
+    if ($columnName == 'thumbnail') {
+        echo edit_post_link(get_the_post_thumbnail($post->ID), null, null, $post->ID);
     }
 }
 
