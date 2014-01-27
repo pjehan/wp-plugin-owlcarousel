@@ -18,3 +18,8 @@ Notice the category option to display items from a specific category.
 
 You can checkout the available options on the Owl carousel website:
 http://www.owlgraphic.com/owlcarousel/
+
+== Screenshots ==
+
+1. Front screenshot
+2. Admin screenshot
