@@ -62,11 +62,10 @@ function owlcarousel_init() {
  * List of JavaScript files
  */
 function owl_register_scripts() {
-    wp_register_script('js.owl.carousel.jquery', plugins_url('/owlcarousel/js/jquery-1.11.0.min.js'));
-    wp_register_script('js.owl.carousel', plugins_url('/owlcarousel/js/owl.carousel.min.js'));
+    wp_register_script('js.owl.carousel', plugins_url('/owlcarousel/js/owl.carousel.js'));
     wp_register_script('js.owl.carousel.script', plugins_url('/owlcarousel/js/script.js'));
 
-    wp_enqueue_script('js.owl.carousel.jquery');
+    wp_enqueue_script('jquery');
     wp_enqueue_script('js.owl.carousel');
     wp_enqueue_script('js.owl.carousel.script');
 }
