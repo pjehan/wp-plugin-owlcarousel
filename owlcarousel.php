@@ -40,7 +40,7 @@ function owlcarousel_init() {
         'publicly_queryable' => false,
         'exclude_from_search' => true,
         'label' => 'Owl Carousel',
-        'menu_icon' => plugins_url('/owlcarousel/images/owl-logo-16.png'),
+        'menu_icon' => plugins_url('/owl-carousel/images/owl-logo-16.png'),
         'labels' => $labels,
         'capability_type' => 'post',
         'supports' => array(
@@ -64,8 +64,8 @@ function owlcarousel_init() {
  * List of JavaScript files
  */
 function owl_register_scripts() {
-    wp_register_script('js.owl.carousel', plugins_url('/owlcarousel/js/owl.carousel.js'));
-    wp_register_script('js.owl.carousel.script', plugins_url('/owlcarousel/js/script.js'));
+    wp_register_script('js.owl.carousel', plugins_url('/owl-carousel/js/owl.carousel.js'));
+    wp_register_script('js.owl.carousel.script', plugins_url('/owl-carousel/js/script.js'));
 
     wp_enqueue_script('jquery');
     wp_enqueue_script('js.owl.carousel');
