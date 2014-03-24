@@ -151,6 +151,7 @@ class owl_Widget extends WP_Widget {
         echo owl_function(array(category => $instance['category'], singleItem => "true", autoPlay => "true", pagination => "false"));
         echo $after_widget;
     }
+
 }
 
 /**
@@ -160,7 +161,7 @@ class owl_Widget extends WP_Widget {
 function owl_columnfilter($columns) {
     $thumb = array('thumbnail' => 'Image');
     $columns = array_slice($columns, 0, 2) + $thumb + array_slice($columns, 2, null);
-    
+
     return $columns;
 }
 
@@ -189,7 +190,7 @@ function owl_function($atts, $content = null) {
     $data_attr = "";
     foreach ($atts as $key => $value) {
         if ($key != "category") {
-            $data_attr .= 'data-' . $key . '="' . $value . '" ';
+            $data_attr .= ' data-' . $key . '="' . $value . '" ';
         }
     }
 

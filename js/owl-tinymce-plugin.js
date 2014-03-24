@@ -1,4 +1,4 @@
-$(document).ready(function() {
+jQuery(document).ready(function($) {
 
     tinymce.create('tinymce.plugins.owl_plugin', {
         init: function(ed, url) {
