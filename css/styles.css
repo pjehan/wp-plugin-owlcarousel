@@ -1,0 +1,29 @@
+.owl-carousel .item img {
+    width: 100%;
+}
+
+.owl-carousel-item-text {
+    text-align: center;
+}
+
+.owl-carousel-item-imgtitle {
+    font-size: 22px;
+}
+
+.owl-carousel-item-imgoverlay {
+    position: absolute;
+    opacity: 0;
+    -webkit-transition: opacity 0.5s ease-out;
+    transition: opacity 0.5s ease-out;
+    background-color: rgba(0, 0, 0, 0);
+    text-align: center;
+    bottom: 0px;
+    width: 100%; 
+    color: white;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.owl-carousel .item:hover .owl-carousel-item-imgoverlay {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.3);
+}

@@ -3,7 +3,7 @@
   Plugin Name: Owl Carousel
   Description: A simple plugin to include an Owl Carousel in any post
   Author: Pierre JEHAN
-  Version: 0.2
+  Version: 0.3
   Author URI: http://www.pierre-jehan.com
   Licence: GPL2
  */
@@ -45,6 +45,7 @@ function owlcarousel_init() {
         'capability_type' => 'post',
         'supports' => array(
             'title',
+            'editor',
             'thumbnail'
         ),
         'taxonomies' => array('category'),
@@ -172,7 +173,7 @@ function owl_columnfilter($columns) {
 function owl_column($columnName) {
     global $post;
     if ($columnName == 'thumbnail') {
-        echo edit_post_link(get_the_post_thumbnail($post->ID), null, null, $post->ID);
+        echo edit_post_link(get_the_post_thumbnail($post->ID, 'thumbnail'), null, null, $post->ID);
     }
 }
 
@@ -196,8 +197,7 @@ function owl_function($atts, $content = null) {
 
     $args = array(
         'post_type' => 'owl-carousel',
-        'category_name' => $atts['category'],
-        'posts_per_page' => 5
+        'category_name' => $atts['category']
     );
 
     $result = '<div id="owl-carousel-' . rand() . '" class="owl-carousel" ' . $data_attr . '>';
@@ -206,8 +206,26 @@ function owl_function($atts, $content = null) {
     while ($loop->have_posts()) {
         $loop->the_post();
 
-        $the_url = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), $type);
-        $result .='<div class="item"><img title="' . get_the_title() . '" src="' . $the_url[0] . '" alt="' . get_the_title() . '"/></div>';
+        $the_url = wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), get_post_type());
+        $result .= '<div class="item">';
+        if ($the_url[0])
+        {
+            $result .= '<div>';
+                if ($the_url[0])
+                {
+                    $result .= '<img title="' . get_the_title() . '" src="' . $the_url[0] . '" alt="' . get_the_title() . '"/>';
+                }
+                $result .= '<div class="owl-carousel-item-imgoverlay">';
+                    $result .= '<div class="owl-carousel-item-imgtitle">' . get_the_title() . '</div>';
+                    $result .= '<div class="owl-carousel-item-imgcontent">' . get_the_content() . '</div>';
+                $result .= '</div>';
+            $result .= '</div>';
+        }
+        else
+        {
+            $result .= '<div class="owl-carousel-item-text">' . get_the_content() . '</div>';
+        }
+        $result .= '</div>';
     }
     $result .= '</div>';
 
