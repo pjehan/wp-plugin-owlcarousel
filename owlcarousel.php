@@ -3,7 +3,7 @@
   Plugin Name: Owl Carousel
   Description: A simple plugin to include an Owl Carousel in any post
   Author: Pierre JEHAN
-  Version: 0.3
+  Version: 0.4
   Author URI: http://www.pierre-jehan.com
   Licence: GPL2
  */
@@ -16,6 +16,12 @@ add_action('wp_print_styles', 'owl_register_styles');
 add_action('widgets_init', 'owl_widgets_init');
 add_action('manage_edit-owl-carousel_columns', 'owl_columnfilter');
 add_action('manage_posts_custom_column', 'owl_column');
+add_action('admin_menu', 'owl_carousel_menu');
+add_action('admin_enqueue_scripts', 'owl_carousel_admin_register_scripts');
+
+if(filter_var(get_option('owl_carousel_wordpress_gallery', false), FILTER_VALIDATE_BOOLEAN)) {
+    add_filter('post_gallery', 'owl_carousel_post_gallery', 10, 2);
+}
 
 /**
  * Initilize the plugin
@@ -23,16 +29,16 @@ add_action('manage_posts_custom_column', 'owl_column');
 function owlcarousel_init() {
 
     $labels = array(
-        'name' => 'Owl Carousel',
-        'singular_name' => 'Carousel Item',
-        'add_new' => 'Add New Item',
-        'add_new_item' => 'Add New Carousel Item',
-        'edit_item' => 'Edit Carousel Item',
-        'new_item' => 'Add New Carousel Item',
-        'view_item' => 'View Item',
-        'search_items' => 'Search Carousel',
-        'not_found' => 'No carousel items found',
-        'not_found_in_trash' => 'No carousel items found in trash',
+        'name' => __('Owl Carousel', 'owl-carousel-domain'),
+        'singular_name' => __('Carousel Item', 'owl-carousel-domain'),
+        'add_new' => __('Add New Item', 'owl-carousel-domain'),
+        'add_new_item' => __('Add New Carousel Item', 'owl-carousel-domain'),
+        'edit_item' => __('Edit Carousel Item', 'owl-carousel-domain'),
+        'new_item' => __('Add New Carousel Item', 'owl-carousel-domain'),
+        'view_item' => __('View Item', 'owl-carousel-domain'),
+        'search_items' => __('Search Carousel', 'owl-carousel-domain'),
+        'not_found' => __('No carousel items found', 'owl-carousel-domain'),
+        'not_found_in_trash' => __('No carousel items found in trash', 'owl-carousel-domain'),
     );
 
     register_post_type('owl-carousel', array(
@@ -47,18 +53,66 @@ function owlcarousel_init() {
             'title',
             'editor',
             'thumbnail'
-        ),
-        'taxonomies' => array('category'),
+        )
     ));
+    
+    register_taxonomy(
+		'Carousel',
+		'owl-carousel',
+		array(
+			'label' => __( 'Carousel' ),
+			'rewrite' => array( 'slug' => 'carousel' ),
+			'hierarchical' => true,
+		)
+	);
 
     add_image_size('owl_widget', 180, 100, true);
     add_image_size('owl_function', 600, 280, true);
 
-    register_taxonomy_for_object_type('category', 'owl-carousel');
-
     add_shortcode('owl-carousel', 'owl_function');
     add_filter("mce_external_plugins", "owl_register_tinymce_plugin");
     add_filter('mce_buttons', 'owl_add_tinymce_button');
+    
+    // Add Wordpress Gallery option
+    add_option('owl_carousel_wordpress_gallery', 'off');
+}
+
+function owl_carousel_menu() {
+    add_submenu_page('edit.php?post_type=owl-carousel', __('Parameters', 'owl-carousel-domain'), __('Parameters', 'owl-carousel-domain'), 'manage_options', 'owl-carousel-parameters', 'submenu_parameters');
+}
+
+function submenu_parameters() {
+    
+    $isWordpressGallery = (filter_var(get_option('owl_carousel_wordpress_gallery', false), FILTER_VALIDATE_BOOLEAN)) ? 'checked' : '';
+    
+    echo '<div class="wrap owl_carousel_page">';
+    
+        echo '<?php update_option("owl_carousel_wordpress_gallery", $_POST["wordpress_gallery"]); ?>';
+    
+		echo '<h2>' . __('Owl Carousel parameters', 'owl-carousel-domain') . '</h2>';
+		
+		echo '<form action="' . plugin_dir_url( __FILE__ ) . 'save_parameter.php" method="POST" id="owlcarouselparameterform">';
+		
+		    echo '<h3>' . __('Wordpress Gallery', 'owl-carousel-domain') . '</h3>';
+		    echo '<input type="checkbox" name="wordpress_gallery" ' . $isWordpressGallery . ' />';
+		    echo '<label>' . __('Use Owl Carousel with Wordpress Gallery', 'owl-carousel-domain') . '</label>';
+		    echo '<br />';
+		    echo '<br />';
+		    echo '<input type="submit" class="button-primary owl-carousel-save-parameter-btn" value="' . __('Save changes', 'owl-carousel-domain') . '" />';
+		    echo '<span class="spinner"></span>';
+		
+		echo '</form>';
+		
+	echo '</div>';
+}
+
+/**
+ * List of JavaScript / CSS files for admin
+ */
+function owl_carousel_admin_register_scripts() {
+    wp_enqueue_style('owl_carousel_admin_styles', plugin_dir_url( __FILE__ ) . 'css/admin_styles.css');
+    
+    wp_enqueue_script( 'owl_carousel_admin_script', plugin_dir_url( __FILE__ ) . 'js/admin_script.js' );
 }
 
 /**
@@ -101,7 +155,6 @@ function owl_add_tinymce_button($buttons) {
 /*
  * Initialize Owl Widget
  */
-
 function owl_widgets_init() {
     register_widget("owl_Widget");
 }
@@ -118,10 +171,10 @@ class owl_Widget extends WP_Widget {
         } else {
             $title = __('Widget Carousel', 'text_domain');
         }
-        if (isset($instance['category'])) {
-            $category = $instance['category'];
+        if (isset($instance['carousel'])) {
+            $carousel = $instance['carousel'];
         } else {
-            $category = 'Uncategorized';
+            $carousel = 'Uncategorized';
         }
         ?>  
         <p>
@@ -129,8 +182,8 @@ class owl_Widget extends WP_Widget {
             <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />  
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id('category'); ?>"><?php _e('Category:'); ?></label>  
-            <input class="widefat" id="<?php echo $this->get_field_id('category'); ?>" name="<?php echo $this->get_field_name('category'); ?>" type="text" value="<?php echo esc_attr($category); ?>" />  
+            <label for="<?php echo $this->get_field_id('carousel'); ?>"><?php _e('Carousel:'); ?></label>  
+            <input class="widefat" id="<?php echo $this->get_field_id('carousel'); ?>" name="<?php echo $this->get_field_name('carousel'); ?>" type="text" value="<?php echo esc_attr($carousel); ?>" />  
         </p>
         <?php
     }
@@ -138,7 +191,7 @@ class owl_Widget extends WP_Widget {
     public function update($new_instance, $old_instance) {
         $instance = array();
         $instance['title'] = strip_tags($new_instance['title']);
-        $instance['category'] = strip_tags($new_instance['category']);
+        $instance['carousel'] = strip_tags($new_instance['carousel']);
 
         return $instance;
     }
@@ -149,7 +202,7 @@ class owl_Widget extends WP_Widget {
         echo $before_widget;
         if (!empty($title))
             echo $before_title . $title . $after_title;
-        echo owl_function(array(category => $instance['category'], singleItem => "true", autoPlay => "true", pagination => "false"));
+        echo owl_function(array(carousel => $instance['carousel'], singleItem => "true", autoPlay => "true", pagination => "false"));
         echo $after_widget;
     }
 
@@ -185,19 +238,19 @@ function owl_column($columnName) {
  */
 function owl_function($atts, $content = null) {
     extract(shortcode_atts(array(
-        'category' => 'Uncategoryzed'
+        'carousel' => 'Uncategoryzed'
                     ), $atts));
 
     $data_attr = "";
     foreach ($atts as $key => $value) {
-        if ($key != "category") {
+        if ($key != "carousel") {
             $data_attr .= ' data-' . $key . '="' . $value . '" ';
         }
     }
 
     $args = array(
         'post_type' => 'owl-carousel',
-        'category_name' => $atts['category']
+		'nopaging' => true
     );
 
     $result = '<div id="owl-carousel-' . rand() . '" class="owl-carousel" ' . $data_attr . '>';
@@ -231,4 +284,86 @@ function owl_function($atts, $content = null) {
 
     return $result;
 }
+
+
+/**
+ * Owl Carousel for Wordpress image gallery
+ * @param string $output Gallery output
+ * @param array $attr Parameters
+ * @return string Owl HTML code
+ */
+function owl_carousel_post_gallery($output, $attr) {
+    global $post;
+
+    if (isset($attr['orderby'])) {
+        $attr['orderby'] = sanitize_sql_orderby($attr['orderby']);
+        if (!$attr['orderby'])
+            unset($attr['orderby']);
+    }
+
+    extract(shortcode_atts(array(
+        'order' => 'ASC',
+        'orderby' => 'menu_order ID',
+        'id' => $post->ID,
+        'itemtag' => 'dl',
+        'icontag' => 'dt',
+        'captiontag' => 'dd',
+        'columns' => 3,
+        'size' => 'thumbnail',
+        'include' => '',
+        'exclude' => ''
+    ), $attr));
+
+    $id = intval($id);
+    if ('RAND' == $order) $orderby = 'none';
+
+    if (!empty($include)) {
+        $include = preg_replace('/[^0-9,]+/', '', $include);
+        $_attachments = get_posts(array('include' => $include, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby));
+
+        $attachments = array();
+        foreach ($_attachments as $key => $val) {
+            $attachments[$val->ID] = $_attachments[$key];
+        }
+    }
+
+    if (empty($attachments)) return '';
+    
+
+    // Add item number if not defined
+    if(!isset($attr['items'])) {
+        $attr['items'] = '1';
+    }
+    
+    $data_attr = "";
+    foreach ($attr as $key => $value) {
+        if ($key != "carousel") {
+            $data_attr .= ' data-' . $key . '="' . $value . '" ';
+        }
+    }
+    
+    $output .= '<div id="owl-carousel-' . rand() . '" class="owl-carousel" ' . $data_attr . '>';
+    
+    foreach ($attachments as $id => $attachment) {
+        $img = wp_get_attachment_image_src($id, 'full');
+        
+        $title = $attachment->post_title;
+        
+        $output .= "<div class=\"item\">";
+        $output .= "<img src=\"{$img[0]}\" width=\"{$img[1]}\" height=\"{$img[2]}\" alt=\"$title\" />\n";
+        $output .= "</div>";
+    }
+
+    $output .= "</div>";
+
+    return $output;
+}
+
+
+/**
+ * Version 0.3 to 0.4 fix for custom taxonomy
+ */
+$con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+mysqli_query($con, "UPDATE " . $wpdb->prefix . "term_taxonomy SET taxonomy = 'Carousel' WHERE term_taxonomy_id IN (SELECT term_taxonomy_id FROM " . $wpdb->prefix . "posts INNER JOIN " . $wpdb->prefix . "term_relationships ON " . $wpdb->prefix . "term_relationships.object_id = " . $wpdb->prefix . "posts.ID WHERE post_type = 'owl-carousel') ");
+
 ?>
