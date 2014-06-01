@@ -7,15 +7,20 @@ License URI: http://opensource.org/licenses/MIT
 
 Add a carousel to your website. Based on the Owl Carousel, a responsive and fully customizable carousel.
 
+== Description ==
+
+Add a carousel to your website. Based on the Owl Carousel, a responsive and fully customizable carousel.
+
 Special thanks to Bartosz Wojciechowski, Owl Carousel developer.
 
-Features :
+#### Features ####
+
 * Image slide
 * HTML slide
 * [NEW!] Wordpress Gallery compatible
 * And of course, all the Owl Carousel options!
 
-How to use:
+#### How to use ####
 1. Create a new Category
 2. Create new slides
 3. Include your carousel in any content (post, page, theme...)
@@ -41,6 +46,7 @@ http://www.owlgraphic.com/owlcarousel/
 And watch this video tutorial:
 http://www.youtube.com/watch?v=yELCuWAY6N8
 
+
 Owl Carousel version 2 is coming soon! This plugin will be compatible with the new version as soon as possible.
 
 If you want to keep up to date with this plugin, you can have a look at my blog: http://blog.pierre-jehan.com
@@ -54,6 +60,9 @@ Extract the zip file and upload the contents to the wp-content/plugins/ director
 2. Admin screenshot
 
 == Changelog ==
+
+= 0.4.1 =
+* Fix custom category
 
 = 0.4 =
 * Wordpress gallery support

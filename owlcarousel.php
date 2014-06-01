@@ -3,7 +3,7 @@
   Plugin Name: Owl Carousel
   Description: A simple plugin to include an Owl Carousel in any post
   Author: Pierre JEHAN
-  Version: 0.4
+  Version: 0.4.1
   Author URI: http://www.pierre-jehan.com
   Licence: GPL2
  */
@@ -171,8 +171,8 @@ class owl_Widget extends WP_Widget {
         } else {
             $title = __('Widget Carousel', 'text_domain');
         }
-        if (isset($instance['carousel'])) {
-            $carousel = $instance['carousel'];
+        if (isset($instance['category'])) {
+            $carousel = $instance['category'];
         } else {
             $carousel = 'Uncategorized';
         }
@@ -182,8 +182,8 @@ class owl_Widget extends WP_Widget {
             <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />  
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id('carousel'); ?>"><?php _e('Carousel:'); ?></label>  
-            <input class="widefat" id="<?php echo $this->get_field_id('carousel'); ?>" name="<?php echo $this->get_field_name('carousel'); ?>" type="text" value="<?php echo esc_attr($carousel); ?>" />  
+            <label for="<?php echo $this->get_field_id('category'); ?>"><?php _e('Carousel:'); ?></label>  
+            <input class="widefat" id="<?php echo $this->get_field_id('category'); ?>" name="<?php echo $this->get_field_name('category'); ?>" type="text" value="<?php echo esc_attr($carousel); ?>" />  
         </p>
         <?php
     }
@@ -191,7 +191,7 @@ class owl_Widget extends WP_Widget {
     public function update($new_instance, $old_instance) {
         $instance = array();
         $instance['title'] = strip_tags($new_instance['title']);
-        $instance['carousel'] = strip_tags($new_instance['carousel']);
+        $instance['category'] = strip_tags($new_instance['category']);
 
         return $instance;
     }
@@ -202,7 +202,7 @@ class owl_Widget extends WP_Widget {
         echo $before_widget;
         if (!empty($title))
             echo $before_title . $title . $after_title;
-        echo owl_function(array(carousel => $instance['carousel'], singleItem => "true", autoPlay => "true", pagination => "false"));
+        echo owl_function(array(category => $instance['category'], singleItem => "true", autoPlay => "true", pagination => "false"));
         echo $after_widget;
     }
 
@@ -238,18 +238,25 @@ function owl_column($columnName) {
  */
 function owl_function($atts, $content = null) {
     extract(shortcode_atts(array(
-        'carousel' => 'Uncategoryzed'
+        'category' => 'Uncategoryzed'
                     ), $atts));
 
     $data_attr = "";
     foreach ($atts as $key => $value) {
-        if ($key != "carousel") {
+        if ($key != "category") {
             $data_attr .= ' data-' . $key . '="' . $value . '" ';
         }
     }
 
     $args = array(
         'post_type' => 'owl-carousel',
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'Carousel',
+                'field' => 'slug',
+                'terms' => $atts['category']
+            )
+        ),
 		'nopaging' => true
     );
 
@@ -337,7 +344,7 @@ function owl_carousel_post_gallery($output, $attr) {
     
     $data_attr = "";
     foreach ($attr as $key => $value) {
-        if ($key != "carousel") {
+        if ($key != "category") {
             $data_attr .= ' data-' . $key . '="' . $value . '" ';
         }
     }
