@@ -30,8 +30,8 @@ You can add your carousel into any post with the following shortcode (or using t
 [owl-carousel]
 To edit the carousel options (items per slide, auto play...) you just need to add options in the shortcode:
 
-[owl-carousel category="Uncategorized" items="1" autoPlay="true"]
-Notice the category option to display items from a specific category.
+[owl-carousel category="Uncategorized" items="1" autoPlay="true" itemsDesktop="1000,2"]
+Notice the category option to display items from a specific category and also the itemsDesktop without the brackets (because it's not possible to include brackets within a Wordpress shortcode).
 
 You can also use the default Wordpress gallery like this (you need to enable this feature in the plugin's parameters):
 
@@ -60,6 +60,12 @@ Extract the zip file and upload the contents to the wp-content/plugins/ director
 2. Admin screenshot
 
 == Changelog ==
+
+= 0.4.3 =
+* Add lazy load compatibility (special thanks to Alexandre BOURLIER for this feature)
+* Fix custom responsive support
+* Add Carousel column in the admin table
+* Add a new "random" parameter to Owl Carousel (random slide order)
 
 = 0.4.2 =
 * Add save_parameter.php file
