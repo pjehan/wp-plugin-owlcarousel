@@ -3,7 +3,7 @@
   Plugin Name: Owl Carousel
   Description: A simple plugin to include an Owl Carousel in any post
   Author: Pierre JEHAN
-  Version: 0.4.1
+  Version: 0.4.2
   Author URI: http://www.pierre-jehan.com
   Licence: GPL2
  */
@@ -247,6 +247,8 @@ function owl_function($atts, $content = null) {
             $data_attr .= ' data-' . $key . '="' . $value . '" ';
         }
     }
+    
+    $lazyLoad = array_key_exists("lazyload", $atts) && $atts["lazyload"] == true;
 
     $args = array(
         'post_type' => 'owl-carousel',
@@ -271,7 +273,11 @@ function owl_function($atts, $content = null) {
         if ($the_url[0])
         {
             $result .= '<div>';
-                if ($the_url[0])
+                if ($lazyLoad)
+                {
+                    $result .= '<img class="lazyOwl" title="' . get_the_title() . '" data-src="' . $the_url[0] . '" alt="' . get_the_title() . '"/>';
+                }
+                else
                 {
                     $result .= '<img title="' . get_the_title() . '" src="' . $the_url[0] . '" alt="' . get_the_title() . '"/>';
                 }
