@@ -63,6 +63,7 @@ function owlcarousel_init() {
 			'label' => __( 'Carousel' ),
 			'rewrite' => array( 'slug' => 'carousel' ),
 			'hierarchical' => true,
+            'show_admin_column' => true,
 		)
 	);
 
