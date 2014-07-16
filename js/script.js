@@ -8,13 +8,18 @@ jQuery(document).ready(function($) {
     
     for (var i in carouselIds) {
         var params = {};
-        var data = $("#" + carouselIds[i]).data();
-        for (var paramName in data) {
-            if ($("#" + carouselIds[i]).data(paramName) !== "") {
-                params[owlCarouselParamName(paramName)] = $("#" + carouselIds[i]).data(paramName);
+        var datas = $("#" + carouselIds[i]).data();
+        for (var paramName in datas) {
+            var data = $("#" + carouselIds[i]).data(paramName);
+            if (data !== "") {
+                // If it's an array (contains comma) parse the string to array
+                if(String(data).indexOf(",") > -1) {
+                    data = data.split(",");
+                }
+                params[owlCarouselParamName(paramName)] = data;
             }
         }
-
+        
         $("#" + carouselIds[i]).owlCarousel(params);
     }
 
