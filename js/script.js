@@ -5,7 +5,7 @@ jQuery(document).ready(function($) {
     $(".owl-carousel").each(function() {
         carouselIds.push($(this).attr("id"));
     });
-    
+
     for (var i in carouselIds) {
         var params = {};
         var datas = $("#" + carouselIds[i]).data();
@@ -16,11 +16,31 @@ jQuery(document).ready(function($) {
                 if(String(data).indexOf(",") > -1) {
                     data = data.split(",");
                 }
-                params[owlCarouselParamName(paramName)] = data;
+                
+                // New random param not available in Owl Carousel
+                if(paramName == "random") {
+                    params[owlCarouselParamName("beforeInit")] = function(elem) {
+                        random(elem);
+                    };
+                } else {
+                    params[owlCarouselParamName(paramName)] = data;
+                }                
             }
         }
-        
+
         $("#" + carouselIds[i]).owlCarousel(params);
+    }
+    
+    /**
+     * Sort random function
+     * @param {Selector} owlSelector Owl Carousel selector
+     */
+    function random(owlSelector){
+        owlSelector.children().sort(function(){
+            return Math.round(Math.random()) - 0.5;
+        }).each(function(){
+            $(this).appendTo(owlSelector);
+        });
     }
 
 });
