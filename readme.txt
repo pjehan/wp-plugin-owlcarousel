@@ -61,6 +61,9 @@ Extract the zip file and upload the contents to the wp-content/plugins/ director
 
 == Changelog ==
 
+= 0.4.2 =
+* Add save_parameter.php file
+
 = 0.4.1 =
 * Fix custom category
 
