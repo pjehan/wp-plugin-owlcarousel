@@ -61,9 +61,6 @@ Extract the zip file and upload the contents to the wp-content/plugins/ director
 
 == Changelog ==
 
-= 0.4.4 =
-* Fix admin errors due to js enqueue
-
 = 0.4.3 =
 * Add lazy load compatibility (special thanks to Alexandre BOURLIER for this feature)
 * Fix custom responsive support
