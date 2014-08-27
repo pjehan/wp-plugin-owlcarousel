@@ -111,9 +111,11 @@ function submenu_parameters() {
  * List of JavaScript / CSS files for admin
  */
 function owl_carousel_admin_register_scripts() {
-    wp_enqueue_style('owl_carousel_admin_styles', plugin_dir_url( __FILE__ ) . 'css/admin_styles.css');
-    
-    wp_enqueue_script( 'owl_carousel_admin_script', plugin_dir_url( __FILE__ ) . 'js/admin_script.js' );
+	wp_register_style('owl.carousel.admin.styles', plugin_dir_url( __FILE__ ) . 'css/admin_styles.css');
+    wp_enqueue_style('owl.carousel.admin.styles');
+
+    wp_register_script('owl.carousel.admin.script', plugin_dir_url( __FILE__ ) . 'js/admin_script.js');
+    wp_enqueue_script('owl.carousel.admin.script');
 }
 
 /**
