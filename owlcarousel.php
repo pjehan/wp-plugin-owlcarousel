@@ -55,7 +55,7 @@ function owlcarousel_init() {
             'thumbnail'
         )
     ));
-    
+
     register_taxonomy(
 		'Carousel',
 		'owl-carousel',
@@ -73,7 +73,7 @@ function owlcarousel_init() {
     add_shortcode('owl-carousel', 'owl_function');
     add_filter("mce_external_plugins", "owl_register_tinymce_plugin");
     add_filter('mce_buttons', 'owl_add_tinymce_button');
-    
+
     // Add Wordpress Gallery option
     add_option('owl_carousel_wordpress_gallery', 'off');
 }
@@ -83,17 +83,17 @@ function owl_carousel_menu() {
 }
 
 function submenu_parameters() {
-    
+
     $isWordpressGallery = (filter_var(get_option('owl_carousel_wordpress_gallery', false), FILTER_VALIDATE_BOOLEAN)) ? 'checked' : '';
-    
+
     echo '<div class="wrap owl_carousel_page">';
-    
+
         echo '<?php update_option("owl_carousel_wordpress_gallery", $_POST["wordpress_gallery"]); ?>';
-    
+
 		echo '<h2>' . __('Owl Carousel parameters', 'owl-carousel-domain') . '</h2>';
-		
+
 		echo '<form action="' . plugin_dir_url( __FILE__ ) . 'save_parameter.php" method="POST" id="owlcarouselparameterform">';
-		
+
 		    echo '<h3>' . __('Wordpress Gallery', 'owl-carousel-domain') . '</h3>';
 		    echo '<input type="checkbox" name="wordpress_gallery" ' . $isWordpressGallery . ' />';
 		    echo '<label>' . __('Use Owl Carousel with Wordpress Gallery', 'owl-carousel-domain') . '</label>';
@@ -101,9 +101,9 @@ function submenu_parameters() {
 		    echo '<br />';
 		    echo '<input type="submit" class="button-primary owl-carousel-save-parameter-btn" value="' . __('Save changes', 'owl-carousel-domain') . '" />';
 		    echo '<span class="spinner"></span>';
-		
+
 		echo '</form>';
-		
+
 	echo '</div>';
 }
 
@@ -179,14 +179,14 @@ class owl_Widget extends WP_Widget {
         } else {
             $carousel = 'Uncategorized';
         }
-        ?>  
+        ?>
         <p>
-            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>  
-            <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />  
+            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id('category'); ?>"><?php _e('Carousel:'); ?></label>  
-            <input class="widefat" id="<?php echo $this->get_field_id('category'); ?>" name="<?php echo $this->get_field_name('category'); ?>" type="text" value="<?php echo esc_attr($carousel); ?>" />  
+            <label for="<?php echo $this->get_field_id('category'); ?>"><?php _e('Carousel:'); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id('category'); ?>" name="<?php echo $this->get_field_name('category'); ?>" type="text" value="<?php echo esc_attr($carousel); ?>" />
         </p>
         <?php
     }
@@ -250,7 +250,7 @@ function owl_function($atts, $content = null) {
             $data_attr .= ' data-' . $key . '="' . $value . '" ';
         }
     }
-    
+
     $lazyLoad = array_key_exists("lazyload", $atts) && $atts["lazyload"] == true;
 
     $args = array(
@@ -344,27 +344,27 @@ function owl_carousel_post_gallery($output, $attr) {
     }
 
     if (empty($attachments)) return '';
-    
+
 
     // Add item number if not defined
     if(!isset($attr['items'])) {
         $attr['items'] = '1';
     }
-    
+
     $data_attr = "";
     foreach ($attr as $key => $value) {
         if ($key != "category") {
             $data_attr .= ' data-' . $key . '="' . $value . '" ';
         }
     }
-    
+
     $output .= '<div id="owl-carousel-' . rand() . '" class="owl-carousel" ' . $data_attr . '>';
-    
+
     foreach ($attachments as $id => $attachment) {
         $img = wp_get_attachment_image_src($id, 'full');
-        
+
         $title = $attachment->post_title;
-        
+
         $output .= "<div class=\"item\">";
         $output .= "<img src=\"{$img[0]}\" width=\"{$img[1]}\" height=\"{$img[2]}\" alt=\"$title\" />\n";
         $output .= "</div>";
@@ -379,7 +379,7 @@ function owl_carousel_post_gallery($output, $attr) {
 /**
  * Version 0.3 to 0.4 fix for custom taxonomy
  */
-$con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-mysqli_query($con, "UPDATE " . $wpdb->prefix . "term_taxonomy SET taxonomy = 'Carousel' WHERE term_taxonomy_id IN (SELECT term_taxonomy_id FROM " . $wpdb->prefix . "posts INNER JOIN " . $wpdb->prefix . "term_relationships ON " . $wpdb->prefix . "term_relationships.object_id = " . $wpdb->prefix . "posts.ID WHERE post_type = 'owl-carousel') ");
-
+if($con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME)) {
+  mysqli_query($con, "UPDATE " . $wpdb->prefix . "term_taxonomy SET taxonomy = 'Carousel' WHERE term_taxonomy_id IN (SELECT term_taxonomy_id FROM " . $wpdb->prefix . "posts INNER JOIN " . $wpdb->prefix . "term_relationships ON " . $wpdb->prefix . "term_relationships.object_id = " . $wpdb->prefix . "posts.ID WHERE post_type = 'owl-carousel') ");
+}
 ?>

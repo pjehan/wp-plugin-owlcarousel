@@ -8,15 +8,15 @@ jQuery(document).ready(function($) {
 
     for (var i in carouselIds) {
         var params = {};
-        var datas = $("#" + carouselIds[i]).data();
+        var datas = $(document.getElementById(carouselIds[i])).data();
         for (var paramName in datas) {
-            var data = $("#" + carouselIds[i]).data(paramName);
+            var data = $(document.getElementById(carouselIds[i])).data(paramName);
             if (data !== "") {
                 // If it's an array (contains comma) parse the string to array
                 if(String(data).indexOf(",") > -1) {
                     data = data.split(",");
                 }
-                
+
                 // New random param not available in Owl Carousel
                 if(paramName == "random") {
                     params[owlCarouselParamName("beforeInit")] = function(elem) {
@@ -24,13 +24,13 @@ jQuery(document).ready(function($) {
                     };
                 } else {
                     params[owlCarouselParamName(paramName)] = data;
-                }                
+                }
             }
         }
 
-        $("#" + carouselIds[i]).owlCarousel(params);
+        $(document.getElementById(carouselIds[i])).owlCarousel(params);
     }
-    
+
     /**
      * Sort random function
      * @param {Selector} owlSelector Owl Carousel selector
