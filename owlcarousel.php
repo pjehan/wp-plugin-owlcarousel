@@ -3,7 +3,7 @@
   Plugin Name: Owl Carousel
   Description: A simple plugin to include an Owl Carousel in any post
   Author: Pierre JEHAN
-  Version: 0.4.4
+  Version: 0.5
   Author URI: http://www.pierre-jehan.com
   Licence: GPL2
  */
@@ -22,6 +22,10 @@ add_action('admin_enqueue_scripts', 'owl_carousel_admin_register_scripts');
 if(filter_var(get_option('owl_carousel_wordpress_gallery', false), FILTER_VALIDATE_BOOLEAN)) {
     add_filter('post_gallery', 'owl_carousel_post_gallery', 10, 2);
 }
+
+// Add functions to create a new attachments fields
+add_filter("attachment_fields_to_edit", "owl_carousel_attachment_fields_to_edit", null, 2);
+add_filter("attachment_fields_to_save", "owl_carousel_attachment_fields_to_save", null, 2);
 
 /**
  * Initilize the plugin
@@ -224,13 +228,45 @@ function owl_columnfilter($columns) {
 
 /**
  * Add custom column contents in administration
- * @param type $columnName
+ * @param string $columnName
  */
 function owl_column($columnName) {
     global $post;
     if ($columnName == 'thumbnail') {
         echo edit_post_link(get_the_post_thumbnail($post->ID, 'thumbnail'), null, null, $post->ID);
     }
+}
+
+/**
+ * Adding our images custom fields to the $form_fields array
+ * @param array $form_fields
+ * @param object $post
+ * @return array
+ */
+function owl_carousel_attachment_fields_to_edit($form_fields, $post) {
+    // add our custom field to the $form_fields array
+    // input type="text" name/id="attachments[$attachment->ID][custom1]"
+    $form_fields["owlurl"] = array(
+        "label" => __("Owl Carousel URL"),
+        "input" => "text",
+        "value" => get_post_meta($post->ID, "_owlurl", true)
+    );
+
+    return $form_fields;
+}
+
+/**
+ * Save images custom fields
+ * @param array $post
+ * @param array $attachment
+ * @return array
+ */
+function owl_carousel_attachment_fields_to_save($post, $attachment) {
+    if( isset($attachment['owlurl']) ){
+        update_post_meta($post['ID'], '_owlurl', $attachment['owlurl']);
+    }
+
+    return $post;
 }
 
 /**
@@ -262,7 +298,7 @@ function owl_function($atts, $content = null) {
                 'terms' => $atts['category']
             )
         ),
-		'nopaging' => true
+        'nopaging' => true
     );
 
     $result = '<div id="owl-carousel-' . rand() . '" class="owl-carousel" ' . $data_attr . '>';
@@ -271,23 +307,34 @@ function owl_function($atts, $content = null) {
     while ($loop->have_posts()) {
         $loop->the_post();
 
-        $the_url = wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), get_post_type());
+        $img_src = wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), get_post_type());
+        $meta_link = get_post_meta(get_post_thumbnail_id(get_the_ID()), '_owlurl', true);
+
         $result .= '<div class="item">';
-        if ($the_url[0])
+        if ($img_src[0])
         {
             $result .= '<div>';
-                if ($lazyLoad)
-                {
-                    $result .= '<img class="lazyOwl" title="' . get_the_title() . '" data-src="' . $the_url[0] . '" alt="' . get_the_title() . '"/>';
+                if(!empty($meta_link)) {
+                    $result .= '<a href="'. $meta_link .'">';
                 }
-                else
-                {
-                    $result .= '<img title="' . get_the_title() . '" src="' . $the_url[0] . '" alt="' . get_the_title() . '"/>';
+                if ($lazyLoad){
+                    $result .= '<img class="lazyOwl" title="' . get_the_title() . '" data-src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
+                } else {
+                    $result .= '<img title="' . get_the_title() . '" src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
                 }
-                $result .= '<div class="owl-carousel-item-imgoverlay">';
-                    $result .= '<div class="owl-carousel-item-imgtitle">' . get_the_title() . '</div>';
-                    $result .= '<div class="owl-carousel-item-imgcontent">' . get_the_content() . '</div>';
-                $result .= '</div>';
+                if(!empty($meta_link)) {
+                    $result .= '</a>';
+                }
+
+                // Add image overlay with hook
+                $slide_title = get_the_title();
+                $slide_content = get_the_content();
+                $img_overlay = '<div class="owl-carousel-item-imgoverlay">';
+                    $img_overlay .= '<div class="owl-carousel-item-imgtitle">' . $slide_title . '</div>';
+                    $img_overlay .= '<div class="owl-carousel-item-imgcontent">' . $slide_content . '</div>';
+                $img_overlay .= '</div>';
+                $result .= apply_filters( 'owlcarousel_img_overlay', $img_overlay, $slide_title, $slide_content, $meta_link );
+
             $result .= '</div>';
         }
         else
@@ -362,11 +409,18 @@ function owl_carousel_post_gallery($output, $attr) {
 
     foreach ($attachments as $id => $attachment) {
         $img = wp_get_attachment_image_src($id, 'full');
+        $meta_link = get_post_meta($id, '_owlurl', true);
 
         $title = $attachment->post_title;
 
         $output .= "<div class=\"item\">";
+        if(!empty($meta_link)) {
+            $output .= "<a href=\"" . $meta_link . "\">";
+        }
         $output .= "<img src=\"{$img[0]}\" width=\"{$img[1]}\" height=\"{$img[2]}\" alt=\"$title\" />\n";
+        if(!empty($meta_link)) {
+            $output .= "</a>";
+        }
         $output .= "</div>";
     }
 

@@ -1,7 +1,7 @@
 === Owl Carousel ===
 Contributors: Pierre Jehan
 Tags: carousel, slideshow, slider, gallery, images, photos, responsive
-Tested up to: 3.9.1
+Tested up to: 4.0
 License: GPL2
 License URI: http://opensource.org/licenses/MIT
 
@@ -17,7 +17,8 @@ Special thanks to Bartosz Wojciechowski, Owl Carousel developer.
 
 * Image slide
 * HTML slide
-* [NEW!] Wordpress Gallery compatible
+* Wordpress Gallery compatible
+* [NEW!] Slide link
 * And of course, all the Owl Carousel options!
 
 #### How to use ####
@@ -54,12 +55,23 @@ If you want to keep up to date with this plugin, you can have a look at my blog:
 == Installation ==
 Extract the zip file and upload the contents to the wp-content/plugins/ directory of your WordPress installation and then activate the plugin from the plugins page.
 
+== Frequently Asked Questions ==
+
+= How can I add a link on Owl Carousel slide? =
+
+Paste the link in the "Owl Carousel URL" field when you choose the slide picture.
+
 == Screenshots ==
 
 1. Front screenshot
 2. Admin screenshot
 
 == Changelog ==
+
+= 0.5 =
+* Fix JS error (jQuery selector)
+* Fix database connection for version update
+* Add new feature: URL link for each slide
 
 = 0.4.4 =
 * Fix admin errors due to js enqueue
