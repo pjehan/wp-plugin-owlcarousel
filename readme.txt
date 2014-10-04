@@ -68,6 +68,10 @@ Paste the link in the "Owl Carousel URL" field when you choose the slide picture
 
 == Changelog ==
 
+= 0.5.1 =
+* Change default items order in parameters
+* Remove version 0.3 to 0.4 fix for custom taxonomy
+
 = 0.5 =
 * Fix JS error (jQuery selector)
 * Fix database connection for version update

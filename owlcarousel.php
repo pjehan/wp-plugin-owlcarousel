@@ -3,7 +3,7 @@
   Plugin Name: Owl Carousel
   Description: A simple plugin to include an Owl Carousel in any post
   Author: Pierre JEHAN
-  Version: 0.5
+  Version: 0.5.1
   Author URI: http://www.pierre-jehan.com
   Licence: GPL2
  */
@@ -80,6 +80,7 @@ function owlcarousel_init() {
 
     // Add Wordpress Gallery option
     add_option('owl_carousel_wordpress_gallery', 'off');
+    add_option('owl_carousel_orderby', 'post_date');
 }
 
 function owl_carousel_menu() {
@@ -89,6 +90,8 @@ function owl_carousel_menu() {
 function submenu_parameters() {
 
     $isWordpressGallery = (filter_var(get_option('owl_carousel_wordpress_gallery', false), FILTER_VALIDATE_BOOLEAN)) ? 'checked' : '';
+    $orderBy = get_option('owl_carousel_orderby', 'post_date');
+    $orderByOptions = array('post_date', 'title');
 
     echo '<div class="wrap owl_carousel_page">';
 
@@ -102,6 +105,13 @@ function submenu_parameters() {
 		    echo '<input type="checkbox" name="wordpress_gallery" ' . $isWordpressGallery . ' />';
 		    echo '<label>' . __('Use Owl Carousel with Wordpress Gallery', 'owl-carousel-domain') . '</label>';
 		    echo '<br />';
+        echo '<label>' . __('Order Owl Carousel elements by ', 'owl-carousel-domain') . '</label>';
+        echo '<select name="orderby" />';
+        foreach($orderByOptions as $option) {
+            echo '<option value="' . $option . '" ' . (($option == $orderBy) ? 'selected="selected"' : '') . '>' . $option . '</option>';
+        }
+        echo '</select>';
+        echo '<br />';
 		    echo '<br />';
 		    echo '<input type="submit" class="button-primary owl-carousel-save-parameter-btn" value="' . __('Save changes', 'owl-carousel-domain') . '" />';
 		    echo '<span class="spinner"></span>';
@@ -115,7 +125,7 @@ function submenu_parameters() {
  * List of JavaScript / CSS files for admin
  */
 function owl_carousel_admin_register_scripts() {
-	wp_register_style('owl.carousel.admin.styles', plugin_dir_url( __FILE__ ) . 'css/admin_styles.css');
+    wp_register_style('owl.carousel.admin.styles', plugin_dir_url( __FILE__ ) . 'css/admin_styles.css');
     wp_enqueue_style('owl.carousel.admin.styles');
 
     wp_register_script('owl.carousel.admin.script', plugin_dir_url( __FILE__ ) . 'js/admin_script.js');
@@ -291,6 +301,8 @@ function owl_function($atts, $content = null) {
 
     $args = array(
         'post_type' => 'owl-carousel',
+        'orderby' => get_option('owl_carousel_orderby', 'post_date'),
+        'order' => 'asc',
         'tax_query' => array(
             array(
                 'taxonomy' => 'Carousel',
@@ -427,13 +439,5 @@ function owl_carousel_post_gallery($output, $attr) {
     $output .= "</div>";
 
     return $output;
-}
-
-
-/**
- * Version 0.3 to 0.4 fix for custom taxonomy
- */
-if($con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME)) {
-  mysqli_query($con, "UPDATE " . $wpdb->prefix . "term_taxonomy SET taxonomy = 'Carousel' WHERE term_taxonomy_id IN (SELECT term_taxonomy_id FROM " . $wpdb->prefix . "posts INNER JOIN " . $wpdb->prefix . "term_relationships ON " . $wpdb->prefix . "term_relationships.object_id = " . $wpdb->prefix . "posts.ID WHERE post_type = 'owl-carousel') ");
 }
 ?>
