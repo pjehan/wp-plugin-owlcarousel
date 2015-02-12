@@ -1,9 +1,9 @@
 {
-    "name": "rasmustaarnby/wp-plugin-owlcarousel",
+    "name": "rasmustaarnby/owl-carousel",
     "description": "A plugin to use Owl Carousel in Wordpress.",
     "type": "wordpress-plugin",
     "keywords": ["wordpress", "plugin"],
-    "homepage": "",
+    "homepage": "https://github.com/rasmustaarnby/owl-carousel",
     "authors": [
         {
             "name": "Jehan Pierre",
