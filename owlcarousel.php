@@ -356,13 +356,14 @@ function owl_function( $atts, $content = null ) {
 			}
 
 			// Add image overlay with hook
-			$slide_title = get_the_title();
-			$slide_content = get_the_content();
+			$slide_title 	= get_the_title();
+			$slide_content 	= get_the_content();
 
-			$img_overlay = '<div class="owl-carousel-item-imgoverlay">';
-			$img_overlay .= '<div class="owl-carousel-item-imgtitle">' . $slide_title . '</div>';
-			$img_overlay .= '<div class="owl-carousel-item-imgcontent">' . apply_filters( 'owlcarousel_img_imgcontent', $slide_content ) . '</div>';
-			$img_overlay .= '</div>';
+			$img_overlay 	= '<div class="owl-carousel-item-imgoverlay">';
+				$img_overlay 	.= '<div class="owl-carousel-item-imgtitle">' . $slide_title . '</div>';
+				$img_overlay 	.= '<div class="owl-carousel-item-imgcontent">' . apply_filters( 'owl_carousel_img_overlay_content', $slide_content ) . '</div>';
+			$img_overlay 	.= '</div>';
+
 			$result .= apply_filters( 'owlcarousel_img_overlay', $img_overlay, $slide_title, $slide_content, $meta_link );
 
 			$result .= '</div>';
