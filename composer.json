@@ -1,5 +1,5 @@
 {
-    "name": "wp-plugin-owlcarousel",
+    "name": "rasmustaarnby/wp-plugin-owlcarousel",
     "description": "A plugin to use Owl Carousel in Wordpress.",
     "type": "wordpress-plugin",
     "keywords": ["wordpress", "plugin"],
