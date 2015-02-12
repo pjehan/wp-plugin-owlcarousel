@@ -360,7 +360,7 @@ function owl_function( $atts, $content = null ) {
 			$slide_content 	= get_the_content();
 
 			$img_overlay 	= '<div class="owl-carousel-item-imgoverlay">';
-				$img_overlay 	.= '<div class="owl-carousel-item-imgtitle">' . $slide_title . '</div>';
+				$img_overlay 	.= '<div class="owl-carousel-item-imgtitle">' . apply_filters( 'owl_carousel_img_overlay_title', $slide_title ) . '</div>';
 				$img_overlay 	.= '<div class="owl-carousel-item-imgcontent">' . apply_filters( 'owl_carousel_img_overlay_content', $slide_content ) . '</div>';
 			$img_overlay 	.= '</div>';
 
@@ -369,7 +369,7 @@ function owl_function( $atts, $content = null ) {
 			$result .= '</div>';
 		}
 		else {
-			$result .= '<div class="owl-carousel-item-text">' . get_the_content() . '</div>';
+			$result .= '<div class="owl-carousel-item-text">' . apply_filters( 'owl_carousel_img_overlay_content', get_the_content() ) . '</div>';
 		}
 		$result .= '</div>';
 	}
