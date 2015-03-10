@@ -12,8 +12,7 @@
 add_theme_support( 'post-thumbnails' );
 
 add_action( 'init', 'owlcarousel_init' );
-add_action( 'wp_print_scripts', 'owl_register_scripts' );
-add_action( 'wp_print_styles', 'owl_register_styles' );
+add_action( 'wp_enqueue_scripts', 'owl_enqueue' );
 add_action( 'widgets_init', 'owl_widgets_init' );
 add_action( 'manage_edit-owl-carousel_columns', 'owl_columnfilter' );
 add_action( 'manage_posts_custom_column', 'owl_column' );
@@ -129,48 +128,28 @@ function submenu_parameters() {
  * List of JavaScript / CSS files for admin
  */
 function owl_carousel_admin_register_scripts() {
-	wp_register_style( 'owl.carousel.admin.styles', plugin_dir_url( __FILE__ ) . 'css/admin_styles.css' );
-	wp_enqueue_style( 'owl.carousel.admin.styles' );
-
-	wp_register_script( 'owl.carousel.admin.script', plugin_dir_url( __FILE__ ) . 'js/admin_script.js' );
-	wp_enqueue_script( 'owl.carousel.admin.script' );
+	wp_enqueue_style( 'owl.carousel.admin.styles', plugin_dir_url( __FILE__ ) . 'css/admin_styles.css' );
+	wp_enqueue_style( 'owl.carousel.admin.script', plugin_dir_url( __FILE__ ) . 'js/admin_script.js' );
 }
 
 
 /**
- * List of JavaScript files
+ * List of JavaScript and css files
  */
-function owl_register_scripts() {
-	wp_register_script( 'js.owl.carousel', plugins_url( '/owl-carousel/js/owl.carousel.min.js' ) );
-	wp_register_script( 'js.owl.carousel.script', plugins_url( '/owl-carousel/js/script.js' ) );
+function owl_enqueue() {
+	wp_enqueue_script( 'js.owl.carousel', plugins_url( '/js/vendor/owl.carousel.min.js', __FILE__ ), array( 'jquery' ) );
+	wp_enqueue_script( 'js.owl.carousel.script', plugins_url( '/js/script.js', __FILE__ ) );
 
-	wp_enqueue_script( 'jquery' );
-	wp_enqueue_script( 'js.owl.carousel' );
-	wp_enqueue_script( 'js.owl.carousel.script' );
+	wp_enqueue_style( 'style.owl.carousel', plugins_url( '/css/vendor/owl.carousel.css', __FILE__ ) );
+	wp_enqueue_style( 'style.owl.carousel.theme', plugins_url( '/css/owl.theme.css', __FILE__ ) );
+	wp_enqueue_style( 'style.owl.carousel.transitions', plugins_url( '/css/owl.transitions.css', __FILE__ ) );
+	wp_enqueue_style( 'style.owl.carousel.styles', plugins_url( '/css/styles.css', __FILE__ ) );
 }
-
-
-/**
- * List of CSS files
- */
-function owl_register_styles() {
-	wp_register_style( 'style.owl.carousel', plugins_url( '/owl-carousel/css/owl.carousel.css' ) );
-	wp_register_style( 'style.owl.carousel.theme', plugins_url( '/owl-carousel/css/owl.theme.css' ) );
-	wp_register_style( 'style.owl.carousel.transitions', plugins_url( '/owl-carousel/css/owl.transitions.css' ) );
-	wp_register_style( 'style.owl.carousel.styles', plugins_url( '/owl-carousel/css/styles.css' ) );
-
-	wp_enqueue_style( 'style.owl.carousel' );
-	wp_enqueue_style( 'style.owl.carousel.theme' );
-	wp_enqueue_style( 'style.owl.carousel.transitions' );
-	wp_enqueue_style( 'style.owl.carousel.styles' );
-}
-
 
 function owl_register_tinymce_plugin( $plugin_array ) {
 	$plugin_array['owl_button'] = plugins_url( '/owl-carousel/js/owl-tinymce-plugin.js' );
 	return $plugin_array;
 }
-
 
 function owl_add_tinymce_button( $buttons ) {
 	$buttons[] = "owl_button";
@@ -350,8 +329,8 @@ function owl_function( $atts, $content = null ) {
 			if ( $lazyLoad ) {
 				$result .= '<img class="lazyOwl" title="' . get_the_title() . '" data-src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
 			} else {
-				// $result .= '<img title="' . get_the_title() . '" src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
-				$result .= '<div style="background-image:url(' . $img_src[0] . ');"></div>';
+				$result .= '<img title="' . get_the_title() . '" src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
+				// $result .= '<div style="background-image:url(' . $img_src[0] . ');"></div>';
 			}
 			if ( !empty( $meta_link ) ) {
 				$result .= '</a>';
