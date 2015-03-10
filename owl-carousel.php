@@ -3,6 +3,7 @@
   Plugin Name: Owl Carousel
   Description: A simple plugin to include an Owl Carousel in any post
   Author: Pierre JEHAN
+  Contributer: Rasmus Taarnby
   Version: 0.5.1
   Author URI: http://www.pierre-jehan.com
   Licence: GPL2
@@ -140,7 +141,7 @@ function owl_carousel_admin_register_scripts() {
  * List of JavaScript files
  */
 function owl_register_scripts() {
-	wp_register_script( 'js.owl.carousel', plugins_url( '/owl-carousel/js/owl.carousel.js' ) );
+	wp_register_script( 'js.owl.carousel', plugins_url( '/owl-carousel/js/owl.carousel.min.js' ) );
 	wp_register_script( 'js.owl.carousel.script', plugins_url( '/owl-carousel/js/script.js' ) );
 
 	wp_enqueue_script( 'jquery' );
@@ -349,20 +350,21 @@ function owl_function( $atts, $content = null ) {
 			if ( $lazyLoad ) {
 				$result .= '<img class="lazyOwl" title="' . get_the_title() . '" data-src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
 			} else {
-				$result .= '<img title="' . get_the_title() . '" src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
+				// $result .= '<img title="' . get_the_title() . '" src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
+				$result .= '<div style="background-image:url(' . $img_src[0] . ');"></div>';
 			}
 			if ( !empty( $meta_link ) ) {
 				$result .= '</a>';
 			}
 
 			// Add image overlay with hook
-			$slide_title 	= get_the_title();
-			$slide_content 	= get_the_content();
+			$slide_title  = get_the_title();
+			$slide_content  = get_the_content();
 
-			$img_overlay 	= '<div class="owl-carousel-item-imgoverlay">';
-				$img_overlay 	.= '<div class="owl-carousel-item-imgtitle">' . apply_filters( 'owl_carousel_img_overlay_title', $slide_title ) . '</div>';
-				$img_overlay 	.= '<div class="owl-carousel-item-imgcontent">' . apply_filters( 'owl_carousel_img_overlay_content', $slide_content ) . '</div>';
-			$img_overlay 	.= '</div>';
+			$img_overlay  = '<div class="owl-carousel-item-imgoverlay">';
+			$img_overlay  .= '<div class="owl-carousel-item-imgtitle">' . apply_filters( 'owl_carousel_img_overlay_title', $slide_title ) . '</div>';
+			$img_overlay  .= '<div class="owl-carousel-item-imgcontent">' . apply_filters( 'owl_carousel_img_overlay_content', $slide_content ) . '</div>';
+			$img_overlay  .= '</div>';
 
 			$result .= apply_filters( 'owlcarousel_img_overlay', $img_overlay, $slide_title, $slide_content, $meta_link );
 
