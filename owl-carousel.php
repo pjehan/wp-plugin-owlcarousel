@@ -73,6 +73,7 @@ function owlcarousel_init() {
 
 	add_image_size( 'owl_widget', 180, 100, true );
 	add_image_size( 'owl_function', 600, 280, true );
+	add_image_size( 'owl-full-width', 1200, 675, false ); // 16/9 full-width
 
 	add_shortcode( 'owl-carousel', 'owl_function' );
 	add_filter( "mce_external_plugins", "owl_register_tinymce_plugin" );
@@ -141,8 +142,8 @@ function owl_enqueue() {
 	wp_enqueue_script( 'js.owl.carousel.script', plugins_url( '/js/script.js', __FILE__ ) );
 
 	wp_enqueue_style( 'style.owl.carousel', plugins_url( '/css/vendor/owl.carousel.css', __FILE__ ) );
-	wp_enqueue_style( 'style.owl.carousel.theme', plugins_url( '/css/owl.theme.css', __FILE__ ) );
-	wp_enqueue_style( 'style.owl.carousel.transitions', plugins_url( '/css/owl.transitions.css', __FILE__ ) );
+	// wp_enqueue_style( 'style.owl.carousel.theme', plugins_url( '/css/owl.theme.css', __FILE__ ) );
+	// wp_enqueue_style( 'style.owl.carousel.transitions', plugins_url( '/css/owl.transitions.css', __FILE__ ) );
 	wp_enqueue_style( 'style.owl.carousel.styles', plugins_url( '/css/styles.css', __FILE__ ) );
 }
 
@@ -285,8 +286,8 @@ function owl_carousel_attachment_fields_to_save( $post, $attachment ) {
  */
 function owl_function( $atts, $content = null ) {
 	extract( shortcode_atts( array(
-				'category' => 'Uncategoryzed'
-			), $atts ) );
+		'category' => 'Uncategoryzed'
+	), $atts ) );
 
 	$data_attr = "";
 	foreach ( $atts as $key => $value ) {
@@ -316,23 +317,33 @@ function owl_function( $atts, $content = null ) {
 	$loop = new WP_Query( $args );
 	while ( $loop->have_posts() ) {
 		$loop->the_post();
-
-		$img_src = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), get_post_type() );
+		$img_src = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'owl-full-width' );
 		$meta_link = get_post_meta( get_post_thumbnail_id( get_the_ID() ), '_owlurl', true );
 
 		$result .= '<div class="item">';
+
 		if ( $img_src[0] ) {
-			$result .= '<div>';
-			if ( !empty( $meta_link ) ) {
+			// $result .= '<div>';
+
+			if ( ! empty( $meta_link ) ) {
 				$result .= '<a href="'. $meta_link .'">';
 			}
+
 			if ( $lazyLoad ) {
 				$result .= '<img class="lazyOwl" title="' . get_the_title() . '" data-src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
 			} else {
-				$result .= '<img title="' . get_the_title() . '" src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
-				// $result .= '<div style="background-image:url(' . $img_src[0] . ');"></div>';
+				// $result .= '<img title="' . get_the_title() . '" src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
+				$result .= '<div class="image" style="
+								background-image: url(' . $img_src[0] . ');
+								background-size: cover;
+								background-position: center;
+								background-repeat: no-repeat;
+								height:' . $img_src[2] . 'px;
+								padding-top:' . $img_src[2] / $img_src[1] * 100 . '%;
+							"></div>';
 			}
-			if ( !empty( $meta_link ) ) {
+
+			if ( ! empty( $meta_link ) ) {
 				$result .= '</a>';
 			}
 
@@ -352,7 +363,7 @@ function owl_function( $atts, $content = null ) {
 		else {
 			$result .= '<div class="owl-carousel-item-text">' . apply_filters( 'owl_carousel_img_overlay_content', get_the_content() ) . '</div>';
 		}
-		$result .= '</div>';
+		// $result .= '</div>';
 	}
 	$result .= '</div>';
 
