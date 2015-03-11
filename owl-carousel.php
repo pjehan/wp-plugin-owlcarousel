@@ -50,7 +50,7 @@ function owlcarousel_init() {
 			'publicly_queryable' => false,
 			'exclude_from_search' => true,
 			'label' => 'Owl Carousel',
-			'menu_icon' => plugins_url( '/owl-carousel/images/owl-logo-16.png' ),
+			'menu_icon' => plugins_url( '/assets/images/owl-logo-16.png', __FILE__ ),
 			'labels' => $labels,
 			'capability_type' => 'post',
 			'supports' => array(
@@ -124,13 +124,21 @@ function submenu_parameters() {
 	echo '</div>';
 }
 
+function slider_settings( $classes ) {
+
+	// sd(get_post_type(get_the_ID()));
+
+	return $classes;
+}
+add_filter( 'post_class', 'slider_settings' );
+
 
 /**
  * List of JavaScript / CSS files for admin
  */
 function owl_carousel_admin_register_scripts() {
-	wp_enqueue_style( 'owl.carousel.admin.styles', plugin_dir_url( __FILE__ ) . 'css/admin_styles.css' );
-	wp_enqueue_style( 'owl.carousel.admin.script', plugin_dir_url( __FILE__ ) . 'js/admin_script.js' );
+	wp_enqueue_style( 'owl.carousel.admin.styles', plugin_dir_url( __FILE__ ) . 'assets/css/admin_styles.css' );
+	wp_enqueue_style( 'owl.carousel.admin.script', plugin_dir_url( __FILE__ ) . 'assets/js/admin-script.js' );
 }
 
 
@@ -138,17 +146,17 @@ function owl_carousel_admin_register_scripts() {
  * List of JavaScript and css files
  */
 function owl_enqueue() {
-	wp_enqueue_script( 'js.owl.carousel', plugins_url( '/js/vendor/owl.carousel.min.js', __FILE__ ), array( 'jquery' ) );
-	wp_enqueue_script( 'js.owl.carousel.script', plugins_url( '/js/script.js', __FILE__ ) );
+	wp_enqueue_script( 'js.owl.carousel', plugins_url( '/assets/js/vendor/owl.carousel.min.js', __FILE__ ), array( 'jquery' ) );
+	wp_enqueue_script( 'js.owl.carousel.script', plugins_url( '/assets/js/scripts.min.js', __FILE__ ) );
 
-	wp_enqueue_style( 'style.owl.carousel', plugins_url( '/css/vendor/owl.carousel.css', __FILE__ ) );
+	wp_enqueue_style( 'style.owl.carousel', plugins_url( '/assets/css/vendor/owl.carousel.css', __FILE__ ) );
 	// wp_enqueue_style( 'style.owl.carousel.theme', plugins_url( '/css/owl.theme.css', __FILE__ ) );
 	// wp_enqueue_style( 'style.owl.carousel.transitions', plugins_url( '/css/owl.transitions.css', __FILE__ ) );
-	wp_enqueue_style( 'style.owl.carousel.styles', plugins_url( '/css/styles.css', __FILE__ ) );
+	wp_enqueue_style( 'style.owl.carousel.styles', plugins_url( '/assets/css/main.min.css', __FILE__ ) );
 }
 
 function owl_register_tinymce_plugin( $plugin_array ) {
-	$plugin_array['owl_button'] = plugins_url( '/owl-carousel/js/owl-tinymce-plugin.js' );
+	$plugin_array['owl_button'] = plugins_url( '/assets/js/owl-tinymce-plugin.js', __FILE__ );
 	return $plugin_array;
 }
 
@@ -318,9 +326,11 @@ function owl_function( $atts, $content = null ) {
 	while ( $loop->have_posts() ) {
 		$loop->the_post();
 		$img_src = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'owl-full-width' );
-		$meta_link = get_post_meta( get_post_thumbnail_id( get_the_ID() ), '_owlurl', true );
 
-		$result .= '<div class="item">';
+		$meta_link = apply_filters( 'owl_image_link', get_post_meta( get_post_thumbnail_id( get_the_ID() ), '_owlurl', true ) );
+		$classes = apply_filters( 'owl_item_classes', array(), get_the_ID() );
+
+		$result .= '<div class="item ' . implode( ' ', $classes ) . '">';
 
 		if ( $img_src[0] ) {
 			// $result .= '<div>';
@@ -351,19 +361,19 @@ function owl_function( $atts, $content = null ) {
 			$slide_title  = get_the_title();
 			$slide_content  = get_the_content();
 
-			$img_overlay  = '<div class="owl-carousel-item-imgoverlay">';
-			$img_overlay  .= '<div class="owl-carousel-item-imgtitle">' . apply_filters( 'owl_carousel_img_overlay_title', $slide_title ) . '</div>';
-			$img_overlay  .= '<div class="owl-carousel-item-imgcontent">' . apply_filters( 'owl_carousel_img_overlay_content', $slide_content ) . '</div>';
+			$img_overlay  = '<div class="owl-item-overlay">';
+			$img_overlay  .= '<div class="owl-item-title">' . apply_filters( 'owl_carousel_img_overlay_title', $slide_title ) . '</div>';
+			$img_overlay  .= '<div class="owl-item-content">' . apply_filters( 'owl_carousel_img_overlay_content', $slide_content, get_the_ID() ) . '</div>';
 			$img_overlay  .= '</div>';
 
 			$result .= apply_filters( 'owlcarousel_img_overlay', $img_overlay, $slide_title, $slide_content, $meta_link );
 
-			$result .= '</div>';
+			// $result .= '</div>';
 		}
 		else {
-			$result .= '<div class="owl-carousel-item-text">' . apply_filters( 'owl_carousel_img_overlay_content', get_the_content() ) . '</div>';
+			$result .= '<div class="owl-item-text">' . apply_filters( 'owl_carousel_img_overlay_content', get_the_content() ) . '</div>';
 		}
-		// $result .= '</div>';
+		$result .= '</div>';
 	}
 	$result .= '</div>';
 
@@ -413,7 +423,6 @@ function owl_carousel_post_gallery( $output, $attr ) {
 	}
 
 	if ( empty( $attachments ) ) return '';
-
 
 	// Add item number if not defined
 	if ( !isset( $attr['items'] ) ) {
