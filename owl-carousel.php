@@ -4,7 +4,7 @@
   Description: A simple plugin to include an Owl Carousel in any post
   Author: Pierre JEHAN
   Contributer: Rasmus Taarnby
-  Version: 0.5.1
+  Version: 0.5.2
   Author URI: http://www.pierre-jehan.com
   Licence: GPL2
  */
