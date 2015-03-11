@@ -359,7 +359,7 @@ function owl_function( $atts, $content = null ) {
 
 			// Add image overlay with hook
 			$slide_title  = get_the_title();
-			$slide_content  = get_the_content();
+			$slide_content  = wpautop( get_the_content() );
 
 			$img_overlay  = '<div class="owl-item-overlay">';
 			$img_overlay  .= '<div class="owl-item-title">' . apply_filters( 'owl_carousel_img_overlay_title', $slide_title ) . '</div>';

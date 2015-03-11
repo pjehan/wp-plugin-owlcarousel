@@ -27,16 +27,14 @@
 		    // -webkit-transition: opacity 0.5s ease-out;
 		    // transition: opacity 0.5s ease-out;
 		    // background-color: rgba(0, 0, 0, 0);
-		    text-align: center;
+		    // text-align: center;
 		    bottom: 0px;
 		    width: 100%;
-		    color: white;
-		    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+		    // color: white;
+		    // text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 		}
 
-		.owl-item-title{
-			font-size: 22px;
-		}
+		.owl-item-title{}
 
 		.owl-item-content{}
 
@@ -51,7 +49,42 @@
 	}
 
 	.owl-controls{
+		.owl-pagination{
+			text-align: center;
+			margin-top: 10px;
+			position: absolute;
+			bottom: 10px;
+			left: 50%;
+			width: 100%;
 
+		    .owl-page{
+				display: inline-block;
+				position: relative;
+				left: -50%;
+
+			    span{
+				    width: 10px;
+					height: 10px;
+					margin: 5px 3px;
+					background: #d6d6d6;
+					display: block;
+					-webkit-backface-visibility: visible;
+					-webkit-transition: opacity 200ms ease;
+					-moz-transition: opacity 200ms ease;
+					-ms-transition: opacity 200ms ease;
+					-o-transition: opacity 200ms ease;
+					transition: opacity 200ms ease;
+					-webkit-border-radius: 30px;
+					-moz-border-radius: 30px;
+					border-radius: 30px;
+			    }
+				&.active{
+					span{
+						background: #869791;
+					}
+				}
+		    }
+	    }
 	}
 }
 
