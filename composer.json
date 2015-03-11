@@ -1,0 +1,19 @@
+{
+    "name": "pjehan/wp-plugin-owlcarousel",
+    "description": "A plugin to use Owl Carousel in Wordpress.",
+    "type": "wordpress-plugin",
+    "keywords": ["wordpress", "plugin"],
+    "homepage": "https://github.com/pjehan/wp-plugin-owlcarousel",
+    "authors": [
+        {
+            "name": "Jehan Pierre",
+            "email": "pierre.jehan@gmail.com",
+            "homepage": "http://www.pierre-jehan.com"
+        },
+        {
+            "name": "Rasmus Taarnby",
+            "email": "rt@peytz.dk",
+            "homepage": "http://peytz.dk/medarbejdere/rt"
+        }
+    ]
+}
