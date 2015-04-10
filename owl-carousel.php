@@ -12,7 +12,9 @@
 add_theme_support( 'post-thumbnails' );
 
 add_action( 'init', 'owlcarousel_init' );
-add_action( 'wp_enqueue_scripts', 'owl_enqueue' );
+// add_action( 'wp_enqueue_scripts', 'owl_enqueue_v2' );
+add_action( 'wp_enqueue_scripts', 'owl_enqueue_v1' );
+
 add_action( 'widgets_init', 'owl_widgets_init' );
 add_action( 'manage_edit-owl-carousel_columns', 'owl_columnfilter' );
 add_action( 'manage_posts_custom_column', 'owl_column' );
@@ -145,15 +147,35 @@ function owl_carousel_admin_register_scripts() {
 /**
  * List of JavaScript and css files
  */
-function owl_enqueue() {
-	wp_enqueue_script( 'js.owl.carousel', plugins_url( '/assets/js/vendor/owl.carousel.min.js', __FILE__ ), array( 'jquery' ) );
+function owl_enqueue_v1() {
+
+	// Vendor
+	wp_enqueue_script( 'js.owl.carousel', plugins_url( 'assets/vendor/owl-carousel-1.3.2/owl-carousel/owl.carousel.min.js', __FILE__ ), array( 'jquery' ) );
+
 	wp_enqueue_script( 'js.owl.carousel.script', plugins_url( '/assets/js/scripts.min.js', __FILE__ ) );
 
-	wp_enqueue_style( 'style.owl.carousel', plugins_url( '/assets/css/vendor/owl.carousel.css', __FILE__ ) );
-	// wp_enqueue_style( 'style.owl.carousel.theme', plugins_url( '/css/owl.theme.css', __FILE__ ) );
-	// wp_enqueue_style( 'style.owl.carousel.transitions', plugins_url( '/css/owl.transitions.css', __FILE__ ) );
+	// Vendor
+	wp_enqueue_style( 'style.owl.carousel', plugins_url( 'assets/vendor/owl-carousel-1.3.2/owl-carousel/owl.carousel.css', __FILE__ ) );
+	wp_enqueue_style( 'style.owl.carousel.theme', plugins_url( 'assets/vendor/owl-carousel-1.3.2/owl-carousel/owl.theme.css', __FILE__ ) );
+	wp_enqueue_style( 'style.owl.carousel.transitions', plugins_url( 'assets/vendor/owl-carousel-1.3.2/owl-carousel/owl.transitions.css', __FILE__ ) );
+
 	wp_enqueue_style( 'style.owl.carousel.styles', plugins_url( '/assets/css/main.min.css', __FILE__ ) );
 }
+
+function owl_enqueue_v2() {
+
+	// Vendor
+	wp_enqueue_script( 'js.owl.carousel', plugins_url( 'assets/vendor/owl-carousel-2.0.0-beta.2.4.4/owl.carousel.min.js', __FILE__ ), array( 'jquery' ) );
+
+	wp_enqueue_script( 'js.owl.carousel.script', plugins_url( '/assets/js/scripts.min.js', __FILE__ ) );
+
+	// Vendor
+	wp_enqueue_style( 'style.owl.carousel', plugins_url( 'assets/vendor/owl-carousel-2.0.0-beta.2.4.4/assets/owl.carousel.css', __FILE__ ) );
+
+	wp_enqueue_style( 'style.owl.carousel.styles', plugins_url( '/assets/css/main.min.css', __FILE__ ) );
+}
+
+
 
 function owl_register_tinymce_plugin( $plugin_array ) {
 	$plugin_array['owl_button'] = plugins_url( '/assets/js/owl-tinymce-plugin.js', __FILE__ );
@@ -320,7 +342,7 @@ function owl_function( $atts, $content = null ) {
 		'nopaging' => true
 	);
 
-	$result = '<div id="owl-carousel-' . rand() . '" class="owl-carousel" ' . $data_attr . '>';
+	$result = '<div id="owl-carousel-' . rand() . '" class="owl-carousel-plugin" ' . $data_attr . '>';
 
 	$loop = new WP_Query( $args );
 	while ( $loop->have_posts() ) {
@@ -436,7 +458,7 @@ function owl_carousel_post_gallery( $output, $attr ) {
 		}
 	}
 
-	$output .= '<div id="owl-carousel-' . rand() . '" class="owl-carousel" ' . $data_attr . '>';
+	$output .= '<div id="owl-carousel-' . rand() . '" class="owl-carousel-plugin" ' . $data_attr . '>';
 
 	foreach ( $attachments as $id => $attachment ) {
 		$img = wp_get_attachment_image_src( $id, 'full' );
