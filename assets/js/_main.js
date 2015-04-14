@@ -2,7 +2,7 @@ jQuery(document).ready(function($) {
 
     var carouselIds = new Array();
 
-    $(".owl-carousel").each(function() {
+    $(".owl-carousel-plugin").each(function() {
         carouselIds.push($(this).attr("id"));
     });
 
