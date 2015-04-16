@@ -16,7 +16,7 @@ namespace Owl;
 /**
  * Do not access this file directly
  */
-if ( !defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -86,7 +86,6 @@ class Main {
 
 		add_action( 'wp_enqueue_scripts',  array( $this, 'enqueue_v1' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
-		// add_action( 'plugins_loaded', array( $this, 'tiny_mce' ) );
 	}
 
 
@@ -110,15 +109,13 @@ class Main {
 	 */
 	public function includes() {
 		include_once( 'includes/class-widget.php' );
-	}
-
-	public function tiny_mce() {
-		include 'includes/tinymce.php';
+		include_once 'includes/tinymce.php';
 	}
 
 	public function init_hooks() {
 		add_action( 'init', array( $this, 'init' ) );
 		add_action( 'widgets_init', array( $this, 'register_widgets' ) );
+
 		// add_shortcode( 'owl-carousel', 'owl_function' );
 		// add_action( 'init', array( 'WC_Shortcodes', 'init' ) );
 	}
@@ -173,12 +170,6 @@ class Main {
 		add_image_size( 'owl_widget', 180, 100, true );
 		add_image_size( 'owl_function', 600, 280, true );
 		add_image_size( 'owl-full-width', 1200, 675, false ); // 16/9 full-width
-
-/*
-
-		add_filter( "mce_external_plugins", "owl_register_tinymce_plugin" );
-		add_filter( 'mce_buttons', 'owl_add_tinymce_button' );
-*/
 
 		// Add Wordpress Gallery option
 /*
@@ -246,14 +237,3 @@ function main() {
 
 
 main();
-
-
-function register_tinymce_plugin( $plugin_array ) {
-	$plugin_array['owl_button'] = plugins_url( '/owl-carousel/assets/js/tinymce-plugin.js' );
-	return $plugin_array;
-}
-
-function add_tinymce_button( $buttons ) {
-	$buttons[] = "owl_button";
-	return $buttons;
-}
