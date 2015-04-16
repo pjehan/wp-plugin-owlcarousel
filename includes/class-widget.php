@@ -171,37 +171,6 @@ class Owl_Widget extends \WP_Widget {
 
 	}
 
-	public function get_menus( $blog_id ){
-
-		switch_to_blog( $blog_id );
-
-		$this->add_select( 'menu', 'Menu', wp_get_nav_menus(), 'menu' );
-
-		restore_current_blog();
-	}
-
-	/**
-	 * Get all subsites
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function get_subsites() {
-		$sites = wp_get_sites();
-		$sites_new = array();
-
-		foreach( $sites as $site ) {
-			$blog_details = get_blog_details( $site['blog_id'] );
-
-			if( ! $blog_details )
-				continue;
-
-			$sites_new[$site['blog_id']] = $blog_details->blogname;
-		}
-
-		return $sites_new;
-	}
-
 	/**
 	 * Updating widget by replacing the old instance with new
 	 *

@@ -1,15 +1,14 @@
 <?php
 
 
-add_theme_support( 'post-thumbnails' );
 
-add_action( 'init', 'owlcarousel_init' );
-add_action( 'wp_enqueue_scripts', 'owl_enqueue' );
-add_action( 'widgets_init', 'owl_widgets_init' );
+
+
+
 add_action( 'manage_edit-owl-carousel_columns', 'owl_columnfilter' );
 add_action( 'manage_posts_custom_column', 'owl_column' );
 add_action( 'admin_menu', 'owl_carousel_menu' );
-add_action( 'admin_enqueue_scripts', 'owl_carousel_admin_register_scripts' );
+
 
 if ( filter_var( get_option( 'owl_carousel_wordpress_gallery', false ), FILTER_VALIDATE_BOOLEAN ) ) {
 	add_filter( 'post_gallery', 'owl_carousel_post_gallery', 10, 2 );
@@ -18,63 +17,6 @@ if ( filter_var( get_option( 'owl_carousel_wordpress_gallery', false ), FILTER_V
 // Add functions to create a new attachments fields
 add_filter( "attachment_fields_to_edit", "owl_carousel_attachment_fields_to_edit", null, 2 );
 add_filter( "attachment_fields_to_save", "owl_carousel_attachment_fields_to_save", null, 2 );
-
-/**
- * Initilize the plugin
- */
-function owlcarousel_init() {
-
-	$labels = array(
-		'name' => __( 'Owl Carousel', 'owl-carousel-domain' ),
-		'singular_name' => __( 'Carousel Item', 'owl-carousel-domain' ),
-		'add_new' => __( 'Add New Item', 'owl-carousel-domain' ),
-		'add_new_item' => __( 'Add New Carousel Item', 'owl-carousel-domain' ),
-		'edit_item' => __( 'Edit Carousel Item', 'owl-carousel-domain' ),
-		'new_item' => __( 'Add New Carousel Item', 'owl-carousel-domain' ),
-		'view_item' => __( 'View Item', 'owl-carousel-domain' ),
-		'search_items' => __( 'Search Carousel', 'owl-carousel-domain' ),
-		'not_found' => __( 'No carousel items found', 'owl-carousel-domain' ),
-		'not_found_in_trash' => __( 'No carousel items found in trash', 'owl-carousel-domain' ),
-	);
-
-	register_post_type( 'owl-carousel', array(
-			'public' => true,
-			'publicly_queryable' => false,
-			'exclude_from_search' => true,
-			'label' => 'Owl Carousel',
-			'menu_icon' => plugins_url( '/assets/images/owl-logo-16.png', __FILE__ ),
-			'labels' => $labels,
-			'capability_type' => 'post',
-			'supports' => array(
-				'title',
-				'editor',
-				'thumbnail'
-			)
-		) );
-
-	register_taxonomy(
-		'Carousel',
-		'owl-carousel',
-		array(
-			'label' => __( 'Carousel' ),
-			'rewrite' => array( 'slug' => 'carousel' ),
-			'hierarchical' => true,
-			'show_admin_column' => true,
-		)
-	);
-
-	add_image_size( 'owl_widget', 180, 100, true );
-	add_image_size( 'owl_function', 600, 280, true );
-	add_image_size( 'owl-full-width', 1200, 675, false ); // 16/9 full-width
-
-	add_shortcode( 'owl-carousel', 'owl_function' );
-	add_filter( "mce_external_plugins", "owl_register_tinymce_plugin" );
-	add_filter( 'mce_buttons', 'owl_add_tinymce_button' );
-
-	// Add Wordpress Gallery option
-	add_option( 'owl_carousel_wordpress_gallery', 'off' );
-	add_option( 'owl_carousel_orderby', 'post_date' );
-}
 
 
 function owl_carousel_menu() {
@@ -122,14 +64,6 @@ function slider_settings( $classes ) {
 }
 add_filter( 'post_class', 'slider_settings' );
 
-
-/**
- * List of JavaScript / CSS files for admin
- */
-function owl_carousel_admin_register_scripts() {
-	wp_enqueue_style( 'owl.carousel.admin.styles', plugin_dir_url( __FILE__ ) . 'assets/css/admin_styles.css' );
-	wp_enqueue_style( 'owl.carousel.admin.script', plugin_dir_url( __FILE__ ) . 'assets/js/admin-script.js' );
-}
 
 
 /**

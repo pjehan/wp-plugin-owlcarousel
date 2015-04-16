@@ -10,7 +10,7 @@ jQuery(document).ready(function($) {
             ed.addButton('owl_button', {title: 'Insert shortcode', cmd: 'owl_insert_shortcode', image: url + '/../images/owl-logo-16.png'});
         }
     });
-    
+
     tinymce.PluginManager.add('owl_button', tinymce.plugins.owl_plugin);
 
 });
