@@ -1,43 +1,40 @@
 <?php
 
+namespace Owl;
+
 /**
- * Class Widget_Better_Starter_Widget
+ * Class Owl_Widget
  */
-class Widget_Main_Menus extends WP_Widget {
+class Owl_Widget extends \WP_Widget {
 
 	/**
 	 * Basic Widget Settings
 	 */
-	var $widget_name = "Multisite menus";
-	var $widget_slug = "multisite-menus";
-	var $widget_desc = "Display a menu from a sub-site";
+	var $widget_name = 'Owl Carousel';
+	var $widget_id = 'owl_widget';
+	var $widget_desc = 'A Owl Carousel Widget';
 	var $fields;
 	var $site_menus;
 
 	/**
 	 * Construct the widget
 	 */
-	function __construct() {
+	public function __construct() {
 
-		//We're going to use $this->textdomain as both the translation domain and the widget class name and ID
-		$this->widget_slug = strtolower( get_class( $this ) );
-
-		//Add fields
+		// Add fields
 		$this->add_field( 'title', 'Enter title', '' );
-		$this->add_select( 'site', 'Site', $this->get_subsites() );
+		$this->add_field( 'category', 'Enter category', '' );
+		// $this->add_select( 'site', 'Site', $this->get_subsites() );
 
-		//Init the widget
+		// Init the widget
 		parent::__construct(
-			$this->widget_slug,
-			__( $this->widget_name, HRS\Widgets::TEXT_DOMAIN ),
+			$this->widget_id,
+			__( $this->widget_name, Main::TEXT_DOMAIN ),
 			array(
-				'description' => __( $this->widget_desc, HRS\Widgets::TEXT_DOMAIN ),
-				'classname' => $this->widget_slug
+				'description' => __( $this->widget_desc, Main::TEXT_DOMAIN ),
+				'classname' => $this->widget_id
 			)
 		);
-
-		// @todo possible solution for the customizer
-		// add_action( 'wp_ajax_dpe_fp_get_terms', array( &$this, 'terms_checklist' ) );
 	}
 
 
@@ -69,9 +66,20 @@ class Widget_Main_Menus extends WP_Widget {
 	 * Everything you want in the widget should be output here.
 	 */
 	private function widget_output( $args, $instance ) {
-		extract( $instance );
+		extract( $$args );
 
-		$this->get_menu_from_blog( $site, $menu );
+		$title = apply_filters( 'widget_title', $instance['title'] );
+
+		echo $before_widget;
+
+			if ( ! empty( $title ) ) {
+				echo $before_title . $title . $after_title;
+			}
+
+			echo owl_function( array( category => $instance['category'], singleItem => "true", autoPlay => "true", pagination => "false" ) );
+
+		echo $after_widget;
+
 	}
 
 
@@ -83,13 +91,19 @@ class Widget_Main_Menus extends WP_Widget {
 	 */
 	public function form( $instance ) {
 
-		$this->get_menus( $instance['site'] );
+		if ( ! isset( $instance['title'] ) ) {
+			$instance['title'] = __( 'Widget Carousel', Main::TEXT_DOMAIN );
+		}
+
+		if ( ! isset( $instance['category'] ) ) {
+			$instance['category'] = 'Uncategorized';
+		}
 
 		// Generate admin for fields
 		foreach( $this->fields as $field_name => $field_data ) {
 			if( $field_data['type'] === 'text' ) : ?>
 				<p>
-					<label for="<?php echo $this->get_field_id( $field_name ); ?>"><?php _e( $field_data['description'], HRS\Widgets::TEXT_DOMAIN ); ?></label>
+					<label for="<?php echo $this->get_field_id( $field_name ); ?>"><?php _e( $field_data['description'], Main::TEXT_DOMAIN ); ?></label>
 					<input class="widefat" id="<?php echo $this->get_field_id( $field_name ); ?>" name="<?php echo $this->get_field_name( $field_name ); ?>" type="text" value="<?php echo esc_attr( isset( $instance[$field_name] ) ? $instance[$field_name] : $field_data['default_value'] ); ?>" />
 				</p>
 			<?php
@@ -113,7 +127,7 @@ class Widget_Main_Menus extends WP_Widget {
 				</p>
 			<?php
 			else:
-				echo __( 'Error - Field type not supported', HRS\Widgets::TEXT_DOMAIN ) . ': ' . $field_data['type'];
+				echo __( 'Error - Field type not supported', Main::TEXT_DOMAIN ) . ': ' . $field_data['type'];
 			endif;
 		}
 	}
@@ -188,28 +202,6 @@ class Widget_Main_Menus extends WP_Widget {
 		return $sites_new;
 	}
 
-
-	/**
-	 * get_menu_from_blog function.
-	 *
-	 * @access public
-	 * @param mixed $blog_id
-	 * @param mixed $menu_id
-	 * @return void
-	 */
-	public function get_menu_from_blog( $blog_id, $menu_id ) {
-
-		switch_to_blog( $blog_id );
-
-		wp_nav_menu( array(
-			'menu' => $menu_id,
-			'items_wrap' => '<ul id="%1$s" class="side-nav %2$s">%3$s</ul>',
-			'depth' => 1
-		) );
-
-		restore_current_blog();
-	}
-
 	/**
 	 * Updating widget by replacing the old instance with new
 	 *
@@ -218,9 +210,10 @@ class Widget_Main_Menus extends WP_Widget {
 	 * @return array
 	 */
 	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['category'] = strip_tags( $new_instance['category'] );
 
-		$this->get_menus( $new_instance['site'] );
-
-		return $new_instance;
+		return $instance;
 	}
 }

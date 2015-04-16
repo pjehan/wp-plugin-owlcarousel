@@ -56,6 +56,21 @@ class Main {
 	public $lang_dir;
 
 	/**
+	 * @var object Instance of this class.
+	 */
+	private static $instance = null;
+
+	/**
+	 * Returns the instance of this class.
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+
+	/**
 	 * @access public
 	 * @return WooCommerce
 	 */
@@ -66,8 +81,7 @@ class Main {
 
 		// Include required files
 		$this->includes();
-
-		$this->register_widgets();
+		$this->init_hooks();
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
 	}
@@ -89,12 +103,12 @@ class Main {
 	/**
 	 * Include classes
 	 */
-	public function includes(){
-		include_once( 'includes/class-widget-main-menus.php' );
+	public function includes() {
+		include_once( 'includes/widget-functions.php' );
 	}
 
-	public function register_widgets() {
-		register_widget( 'Widget_Main_Menus' );
+	public function init_hooks() {
+		// add_action( 'init', array( 'WC_Shortcodes', 'init' ) );
 	}
 
 	/**
@@ -107,10 +121,10 @@ class Main {
 } // end class
 
 /**
- * Returns the main instance of Hjr_WC
+ * Returns the main instance
  */
-function main_init() {
-	new Main();
+function main() {
+	return Main::instance();;
 }
 
-add_action( 'plugins_loaded', 'Owl\Main' );
+main();
