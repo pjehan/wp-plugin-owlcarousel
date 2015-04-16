@@ -84,6 +84,7 @@ class Main {
 		$this->includes();
 		$this->init_hooks();
 
+		add_action( 'admin_menu', array( $this, 'submenu_page' ) );
 		add_action( 'wp_enqueue_scripts',  array( $this, 'enqueue_v1' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
 	}
@@ -108,16 +109,62 @@ class Main {
 	 * Include classes
 	 */
 	public function includes() {
+		include_once( 'includes/function-shortcode.php' );
 		include_once( 'includes/class-widget.php' );
 		include_once 'includes/tinymce.php';
 	}
+
 
 	public function init_hooks() {
 		add_action( 'init', array( $this, 'init' ) );
 		add_action( 'widgets_init', array( $this, 'register_widgets' ) );
 
-		// add_shortcode( 'owl-carousel', 'owl_function' );
-		// add_action( 'init', array( 'WC_Shortcodes', 'init' ) );
+		add_action( 'manage_edit-owl-carousel_columns', array( $this, 'owl_columnfilter' ) );
+		add_action( 'manage_posts_custom_column', array( $this, 'owl_column' ) );
+
+		// Add functions to create a new attachments fields
+		add_filter( "attachment_fields_to_edit", array( $this, 'owl_carousel_attachment_fields_to_edit' ), null, 2 );
+		add_filter( "attachment_fields_to_save", array( $this, 'owl_carousel_attachment_fields_to_save' ), null, 2 );
+	}
+
+
+	public function submenu_page() {
+		add_submenu_page( 'edit.php?post_type=owl-carousel', __( 'Parameters', 'owl-carousel-domain' ), __( 'Parameters', 'owl-carousel-domain' ), 'manage_options', 'owl-carousel-parameters', array( $this, 'submenu_parameters' ) );
+	}
+
+
+	function submenu_parameters() {
+
+		$isWordpressGallery = ( filter_var( get_option( 'owl_carousel_wordpress_gallery', false ), FILTER_VALIDATE_BOOLEAN ) ) ? 'checked' : '';
+		$orderBy = get_option( 'owl_carousel_orderby', 'post_date' );
+		$orderByOptions = array( 'post_date', 'title' );
+
+		echo '<div class="wrap owl_carousel_page">';
+
+		echo '<?php update_option("owl_carousel_wordpress_gallery", $_POST["wordpress_gallery"]); ?>';
+
+		echo '<h2>' . __( 'Owl Carousel parameters', 'owl-carousel-domain' ) . '</h2>';
+
+		echo '<form action="' . plugin_dir_url( __FILE__ ) . 'save_parameter.php" method="POST" id="owlcarouselparameterform">';
+
+		echo '<h3>' . __( 'Wordpress Gallery', 'owl-carousel-domain' ) . '</h3>';
+		echo '<input type="checkbox" name="wordpress_gallery" ' . $isWordpressGallery . ' />';
+		echo '<label>' . __( 'Use Owl Carousel with Wordpress Gallery', 'owl-carousel-domain' ) . '</label>';
+		echo '<br />';
+		echo '<label>' . __( 'Order Owl Carousel elements by ', 'owl-carousel-domain' ) . '</label>';
+		echo '<select name="orderby" />';
+		foreach ( $orderByOptions as $option ) {
+			echo '<option value="' . $option . '" ' . ( ( $option == $orderBy ) ? 'selected="selected"' : '' ) . '>' . $option . '</option>';
+		}
+		echo '</select>';
+		echo '<br />';
+		echo '<br />';
+		echo '<input type="submit" class="button-primary owl-carousel-save-parameter-btn" value="' . __( 'Save changes', 'owl-carousel-domain' ) . '" />';
+		echo '<span class="spinner"></span>';
+
+		echo '</form>';
+
+		echo '</div>';
 	}
 
 
@@ -172,16 +219,18 @@ class Main {
 		add_image_size( 'owl-full-width', 1200, 675, false ); // 16/9 full-width
 
 		// Add Wordpress Gallery option
-/*
+		/*
 		add_option( 'owl_carousel_wordpress_gallery', 'off' );
 		add_option( 'owl_carousel_orderby', 'post_date' );
 */
 
 	}
 
+
 	public function register_widgets() {
 		register_widget( 'Owl\Owl_Widget' );
 	}
+
 
 	/**
 	 * Enqueue frontend scripts and styles
@@ -201,6 +250,7 @@ class Main {
 		// Compiled
 		wp_enqueue_style( 'owl-carousel-style-main', \plugins_url( '/assets/css/main.min.css', __FILE__ ) );
 	}
+
 
 	public function enqueue_v2() {
 		// Vendor
@@ -223,6 +273,64 @@ class Main {
 	public function admin_enqueue() {
 		wp_enqueue_style( 'owl-carousel-admin-style', \plugins_url( 'assets/css/admin-styles.css', __FILE__ ) );
 		wp_enqueue_script( 'owl-carousel-admin-js', \plugins_url( 'assets/js/admin-script.js' , __FILE__ ), array( 'jquery' ), time(), true );
+	}
+
+
+	/**
+	 * Add custom column filters in administration
+	 * @param array $columns
+	 */
+	public function owl_columnfilter( $columns ) {
+		$thumb = array( 'thumbnail' => 'Image' );
+		$columns = array_slice( $columns, 0, 2 ) + $thumb + array_slice( $columns, 2, null );
+
+		return $columns;
+	}
+
+
+	/**
+	 * Add custom column contents in administration
+	 * @param string $columnName
+	 */
+	public function owl_column( $columnName ) {
+		global $post;
+		if ( $columnName == 'thumbnail' ) {
+			echo edit_post_link( get_the_post_thumbnail( $post->ID, 'thumbnail' ), null, null, $post->ID );
+		}
+	}
+
+
+	/**
+	 * Adding our images custom fields to the $form_fields array
+	 * @param array $form_fields
+	 * @param object $post
+	 * @return array
+	 */
+	public function owl_carousel_attachment_fields_to_edit( $form_fields, $post ) {
+		// add our custom field to the $form_fields array
+		// input type="text" name/id="attachments[$attachment->ID][custom1]"
+		$form_fields["owlurl"] = array(
+			"label" => __( "Owl Carousel URL" ),
+			"input" => "text",
+			"value" => get_post_meta( $post->ID, "_owlurl", true )
+		);
+
+		return $form_fields;
+	}
+
+
+	/**
+	 * Save images custom fields
+	 * @param array $post
+	 * @param array $attachment
+	 * @return array
+	 */
+	public function owl_carousel_attachment_fields_to_save( $post, $attachment ) {
+		if ( isset( $attachment['owlurl'] ) ) {
+			update_post_meta( $post['ID'], '_owlurl', $attachment['owlurl'] );
+		}
+
+		return $post;
 	}
 
 

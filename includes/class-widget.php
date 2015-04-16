@@ -66,7 +66,7 @@ class Owl_Widget extends \WP_Widget {
 	 * Everything you want in the widget should be output here.
 	 */
 	private function widget_output( $args, $instance ) {
-		extract( $$args );
+		extract( $args );
 
 		$title = apply_filters( 'widget_title', $instance['title'] );
 
@@ -76,7 +76,7 @@ class Owl_Widget extends \WP_Widget {
 				echo $before_title . $title . $after_title;
 			}
 
-			echo owl_function( array( category => $instance['category'], singleItem => "true", autoPlay => "true", pagination => "false" ) );
+			echo owl_function( array( 'category' => $instance['category'], 'singleItem' => 'true', 'autoPlay' => 'true', 'pagination' => 'false' ) );
 
 		echo $after_widget;
 
