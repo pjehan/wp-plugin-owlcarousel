@@ -4,7 +4,7 @@ Plugin Name: Owl Carousel
 Description: A simple plugin to include an Owl Carousel in any post
 Author: Pierre Jehan
 Contributer: Rasmus Taarnby
-Version: 1.0.1
+Version: 1.0.2
 Text Domain: owl-carousel
 Domain Path: /languages
 Author URI: http://www.pierre-jehan.com
