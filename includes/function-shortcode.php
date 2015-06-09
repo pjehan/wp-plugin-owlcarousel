@@ -8,7 +8,8 @@
  */
 function owl_function( $atts, $content = null ) {
 	extract( shortcode_atts( array(
-				'category' => 'Uncategoryzed'
+				'category' => 'Uncategoryzed',
+				'size' => 'owl-full-width'
 			), $atts ) );
 
 	$data_attr = "";
@@ -40,7 +41,7 @@ function owl_function( $atts, $content = null ) {
 	$loop = new WP_Query( $args );
 	while ( $loop->have_posts() ) {
 		$loop->the_post();
-		$img_src = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'owl-full-width' );
+		$img_src = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), $atts['size'] );
 
 		$meta_link = apply_filters( 'owl_image_link', get_post_meta( get_post_thumbnail_id( get_the_ID() ), '_owlurl', true ) );
 		$classes = apply_filters( 'owl_item_classes', array(), get_the_ID() );
