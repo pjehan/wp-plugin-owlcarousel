@@ -154,10 +154,10 @@ function owl_carousel_post_gallery( $output, $attr ) {
 		}
 	}
 
-	$output .= '<div id="owl-carousel-' . rand() . '" class="owl-carousel" ' . $data_attr . '>';
+	$output .= '<div id="owl-carousel-' . rand() . '" class="owl-carousel-plugin" ' . $data_attr . '>';
 
 	foreach ( $attachments as $id => $attachment ) {
-		$img = wp_get_attachment_image_src( $id, 'full' );
+		$img = wp_get_attachment_image_src( $id, 'fcn-large' );
 		$meta_link = get_post_meta( $id, '_owlurl', true );
 
 		$title = $attachment->post_title;
@@ -166,7 +166,16 @@ function owl_carousel_post_gallery( $output, $attr ) {
 		if ( !empty( $meta_link ) ) {
 			$output .= "<a href=\"" . $meta_link . "\">";
 		}
-		$output .= "<img src=\"{$img[0]}\" width=\"{$img[1]}\" height=\"{$img[2]}\" alt=\"$title\" />\n";
+
+		$output .= '<div class="image" style="
+						background-image: url(' . $img[0] . ');
+						background-size: cover;
+						background-position: center;
+						background-repeat: no-repeat;
+						height:' . $img[2] . 'px;
+						padding-top:' . $img[2] / $img[1] * 100 . '%;
+					"></div>';
+
 		if ( !empty( $meta_link ) ) {
 			$output .= "</a>";
 		}

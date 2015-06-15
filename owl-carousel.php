@@ -237,10 +237,10 @@ class Main {
 	 */
 	public function enqueue_v1() {
 		// Vendor
-		wp_enqueue_script( 'owl-carousel-js', \plugins_url( 'assets/vendor/owl-carousel-1.3.2/owl-carousel/owl.carousel.min.js', __FILE__ ), array( 'jquery' ) );
+		wp_enqueue_script( 'owl-carousel-js', \plugins_url( 'assets/vendor/owl-carousel-1.3.2/owl-carousel/owl.carousel.min.js', __FILE__ ), array( 'jquery' ), null, true );
 
 		// Compiled
-		wp_enqueue_script( 'owl-carousel-js-main', \plugins_url( '/assets/js/scripts.min.js', __FILE__ ) );
+		wp_enqueue_script( 'owl-carousel-js-main', \plugins_url( '/assets/js/scripts.min.js', __FILE__ ), null, null, true );
 
 		// Vendor
 		wp_enqueue_style( 'owl-carousel-style', \plugins_url( 'assets/vendor/owl-carousel-1.3.2/owl-carousel/owl.carousel.css', __FILE__ ) );
@@ -345,4 +345,3 @@ function main() {
 
 
 main();
-
