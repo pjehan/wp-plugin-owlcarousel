@@ -157,7 +157,7 @@ function owl_carousel_post_gallery( $output, $attr ) {
 	$output .= '<div id="owl-carousel-' . rand() . '" class="owl-carousel-plugin" ' . $data_attr . '>';
 
 	foreach ( $attachments as $id => $attachment ) {
-		$img = wp_get_attachment_image_src( $id, 'fcn-large' );
+		$img = wp_get_attachment_image_src( $id, 'full' );
 		$meta_link = get_post_meta( $id, '_owlurl', true );
 
 		$title = $attachment->post_title;
