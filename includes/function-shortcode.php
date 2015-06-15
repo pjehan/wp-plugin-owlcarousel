@@ -168,13 +168,13 @@ function owl_carousel_post_gallery( $output, $attr ) {
 		}
 
 		$output .= '<div class="image" style="
-						background-image: url(' . $img[0] . ');
-						background-size: cover;
-						background-position: center;
-						background-repeat: no-repeat;
-						height:' . $img[2] . 'px;
-						padding-top:' . $img[2] / $img[1] * 100 . '%;
-					"></div>';
+			background-image: url(' . $img[0] . ');
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			height:' . $img[2] . 'px;
+			padding-top:' . $img[2] / $img[1] * 100 . '%;
+		"></div>';
 
 		if ( !empty( $meta_link ) ) {
 			$output .= "</a>";
