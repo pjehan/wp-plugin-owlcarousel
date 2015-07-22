@@ -27,7 +27,6 @@ jQuery(document).ready(function($) {
                 }
             }
         }
-        console.log(params);
 
         $(document.getElementById(carouselIds[i])).owlCarousel(params);
     }
