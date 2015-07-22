@@ -801,7 +801,7 @@ if (typeof Object.create !== "function") {
                                   "; transform:"         + translate3D;
             regex = /translate3d\(0px, 0px, 0px\)/g;
             asSupport = tempElem.style.cssText.match(regex);
-            support3d = (asSupport !== null && asSupport.length === 1);
+            support3d = (asSupport !== null && asSupport.length >= 1 && asSupport.length <= 2);
 
             isTouch = "ontouchstart" in window || window.navigator.msMaxTouchPoints;
 
@@ -1197,7 +1197,7 @@ if (typeof Object.create !== "function") {
                 iterations += 1;
                 if (base.completeImg($lazyImg.get(0)) || isBackgroundImg === true) {
                     showImage();
-                } else if (iterations <= 100) {//if image loads in less than 10 seconds 
+                } else if (iterations <= 100) {//if image loads in less than 10 seconds
                     window.setTimeout(checkLazyImage, 100);
                 } else {
                     showImage();
@@ -1226,7 +1226,7 @@ if (typeof Object.create !== "function") {
                 iterations += 1;
                 if (base.completeImg($currentimg.get(0))) {
                     addHeight();
-                } else if (iterations <= 100) { //if image loads in less than 10 seconds 
+                } else if (iterations <= 100) { //if image loads in less than 10 seconds
                     window.setTimeout(checkImage, 100);
                 } else {
                     base.wrapperOuter.css("height", ""); //Else remove height attribute

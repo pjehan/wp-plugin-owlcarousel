@@ -85,7 +85,7 @@ class Main {
 		$this->init_hooks();
 
 		add_action( 'admin_menu', array( $this, 'submenu_page' ) );
-		add_action( 'wp_enqueue_scripts',  array( $this, 'enqueue_v1' ) );
+		add_action( 'wp_enqueue_scripts',  array( $this, 'enqueue_v2' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
 	}
 

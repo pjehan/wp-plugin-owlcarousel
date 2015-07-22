@@ -8,7 +8,7 @@
  */
 function owl_function( $atts, $content = null ) {
 	extract( shortcode_atts( array(
-				'category' => 'Uncategoryzed',
+				'category' => 'Uncategorized',
 				'size' => 'owl-full-width'
 			), $atts ) );
 
