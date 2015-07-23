@@ -7,16 +7,24 @@
  * @return string Owl HTML code
  */
 function owl_function( $atts, $content = null ) {
-	extract( shortcode_atts( array(
-				'category' => 'Uncategorized',
-				'size' => 'owl-full-width'
-			), $atts ) );
+
+	$default_atts = array(
+		'category' => 'Uncategorized',
+		'size' => 'owl-full-width',
+	);
+
+	if ( has_filter( 'owl_custom_default_atts' ) ) {
+		$custom_default_atts = apply_filters( 'owl_custom_default_atts', array() );
+		$default_atts = array_merge( $default_atts, $custom_default_atts );
+	}
+
+	$atts = array_merge( $default_atts , $atts  );
 
 	$data_attr = "";
 
 	foreach ( $atts as $key => $value ) {
 		if ( $key != "category" ) {
-			$data_attr .= ' data-' . $key . '="' . $value . '" ';
+			$data_attr .= ' data-' . strtolower( $key ) . '="' . $value . '" ';
 		}
 	}
 
@@ -91,6 +99,7 @@ function owl_function( $atts, $content = null ) {
 		}
 		$result .= '</div>';
 	}
+	$result .= '<div class="item-video"><a class="owl-video" href="https://www.youtube.com/watch?v=TdMuUzHEt50"></a></div>';
 	$result .= '</div>';
 
 	return $result;
