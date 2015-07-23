@@ -315,6 +315,12 @@ class Main {
 			"value" => get_post_meta( $post->ID, "_owlurl", true )
 		);
 
+		$form_fields["owlvideo"] = array(
+			"label" => __( "Owl Carousel Video URL" ),
+			"input" => "text",
+			"value" => get_post_meta( $post->ID, "_owlvideo", true )
+		);
+
 		return $form_fields;
 	}
 
@@ -326,8 +332,12 @@ class Main {
 	 * @return array
 	 */
 	public function owl_carousel_attachment_fields_to_save( $post, $attachment ) {
-		if ( isset( $attachment['owlurl'] ) ) {
-			update_post_meta( $post['ID'], '_owlurl', $attachment['owlurl'] );
+		if ( isset( $attachment['owlvideo'] ) ) {
+			update_post_meta( $post['ID'], '_owlvideo', $attachment['owlvideo'] );
+		}
+
+		if ( isset( $attachment['owlvideo'] ) ) {
+			update_post_meta( $post['ID'], '_owlvideo', $attachment['owlvideo'] );
 		}
 
 		return $post;

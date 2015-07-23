@@ -54,12 +54,19 @@ function owl_function( $atts, $content = null ) {
 		// owl_image_link filter
 		$meta_link = apply_filters( 'owl_image_link', get_post_meta( get_post_thumbnail_id( get_the_ID() ), '_owlurl', true ) );
 
+		// owl_video_link filter
+		$video_link = apply_filters( 'owl_video_link', get_post_meta( get_post_thumbnail_id( get_the_ID() ), '_owlvideo', true ) );
+
 		// owl_item_classes filter
 		$classes = apply_filters( 'owl_item_classes', array(), get_the_ID() );
 
-		$result .= '<div class="item ' . implode( ' ', $classes ) . '">';
+		$result .= '<div class="' . ( ( $video_link ) ? 'item-video' : 'item' ) .' ' . implode( ' ', $classes ) . '">';
 
-		if ( $img_src[0] ) {
+		if ( $video_link ) {
+
+			$result .= '<a class="owl-video" href="' . $video_link . '"></a>';
+
+		} elseif ( $img_src[0] ) {
 
 			if ( ! empty( $meta_link ) ) {
 				$result .= '<a href="'. $meta_link .'">';
@@ -101,7 +108,6 @@ function owl_function( $atts, $content = null ) {
 		}
 		$result .= '</div>';
 	}
-	$result .= '<div class="item-video"><a class="owl-video" href="https://www.youtube.com/watch?v=TdMuUzHEt50"></a></div>';
 	$result .= '</div>';
 
 	return $result;
