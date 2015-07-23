@@ -6,15 +6,17 @@
  * @param type $content
  * @return string Owl HTML code
  */
+
 function owl_function( $atts, $content = null ) {
 
+	// Default attributes
 	$default_atts = array(
 		'category' => 'Uncategorized',
 		'size' => 'owl-full-width',
 	);
 
-	$custom_default_atts = apply_filters( 'owl_custom_default_atts', array() );
-	$atts = array_merge( $default_atts, $custom_default_atts, $atts );
+	// owl_custom_default_atts filter
+	$atts = apply_filters( 'owl_custom_default_atts', $atts, $default_atts );
 
 	$data_attr = "";
 
@@ -26,6 +28,7 @@ function owl_function( $atts, $content = null ) {
 
 	$lazyLoad = array_key_exists( "lazyload", $atts ) && $atts["lazyload"] == true;
 
+	// Loop
 	$args = array(
 		'post_type' => 'owl-carousel',
 		'orderby' => get_option( 'owl_carousel_orderby', 'post_date' ),
@@ -44,16 +47,19 @@ function owl_function( $atts, $content = null ) {
 
 	$loop = new WP_Query( $args );
 	while ( $loop->have_posts() ) {
+
 		$loop->the_post();
 		$img_src = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), $atts['size'] );
 
+		// owl_image_link filter
 		$meta_link = apply_filters( 'owl_image_link', get_post_meta( get_post_thumbnail_id( get_the_ID() ), '_owlurl', true ) );
+
+		// owl_item_classes filter
 		$classes = apply_filters( 'owl_item_classes', array(), get_the_ID() );
 
 		$result .= '<div class="item ' . implode( ' ', $classes ) . '">';
 
 		if ( $img_src[0] ) {
-			// $result .= '<div>';
 
 			if ( ! empty( $meta_link ) ) {
 				$result .= '<a href="'. $meta_link .'">';
@@ -62,7 +68,7 @@ function owl_function( $atts, $content = null ) {
 			if ( $lazyLoad ) {
 				$result .= '<img class="lazyOwl" title="' . get_the_title() . '" data-src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
 			} else {
-				// $result .= '<img title="' . get_the_title() . '" src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
+
 				$result .= '<div class="image" style="
 								background-image: url(' . $img_src[0] . ');
 								background-size: cover;
@@ -86,9 +92,9 @@ function owl_function( $atts, $content = null ) {
 			$img_overlay  .= '<div class="owl-item-content">' . apply_filters( 'owl_carousel_img_overlay_content', $slide_content, get_the_ID() ) . '</div>';
 			$img_overlay  .= '</div>';
 
+			// owlcarousel_img_overlay filter
 			$result .= apply_filters( 'owlcarousel_img_overlay', $img_overlay, $slide_title, $slide_content, $meta_link );
 
-			// $result .= '</div>';
 		}
 		else {
 			$result .= '<div class="owl-item-text">' . apply_filters( 'owl_carousel_img_overlay_content', get_the_content() ) . '</div>';

@@ -1,7 +1,7 @@
 <?php
 
 $base_dir = dirname( __FILE__ ) . '/../../../';
-require( $base_dir . 'wp/wp-load.php' );
+require( $base_dir . 'wp-load.php' );
 
 $wordpress_gallery = $_POST["wordpress_gallery"];
 $orderby = $_POST["orderby"];
