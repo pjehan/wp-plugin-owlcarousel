@@ -13,12 +13,8 @@ function owl_function( $atts, $content = null ) {
 		'size' => 'owl-full-width',
 	);
 
-	if ( has_filter( 'owl_custom_default_atts' ) ) {
-		$custom_default_atts = apply_filters( 'owl_custom_default_atts', array() );
-		$default_atts = array_merge( $default_atts, $custom_default_atts );
-	}
-
-	$atts = array_merge( $default_atts , $atts  );
+	$custom_default_atts = apply_filters( 'owl_custom_default_atts', array() );
+	$atts = array_merge( $default_atts, $custom_default_atts, $atts );
 
 	$data_attr = "";
 
