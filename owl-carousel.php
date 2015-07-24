@@ -235,23 +235,6 @@ class Main {
 	/**
 	 * Enqueue frontend scripts and styles
 	 */
-	public function enqueue_v1() {
-		// Vendor
-		wp_enqueue_script( 'owl-carousel-js', \plugins_url( 'assets/vendor/owl-carousel-1.3.2/owl-carousel/owl.carousel.min.js', __FILE__ ), array( 'jquery' ), null, true );
-
-		// Compiled
-		wp_enqueue_script( 'owl-carousel-js-main', \plugins_url( '/assets/js/scripts.min.js', __FILE__ ), null, null, true );
-
-		// Vendor
-		wp_enqueue_style( 'owl-carousel-style', \plugins_url( 'assets/vendor/owl-carousel-1.3.2/owl-carousel/owl.carousel.css', __FILE__ ) );
-		wp_enqueue_style( 'owl-carousel-style-theme', \plugins_url( 'assets/vendor/owl-carousel-1.3.2/owl-carousel/owl.theme.css', __FILE__ ) );
-		wp_enqueue_style( 'owl-carousel-style-transitions', \plugins_url( 'assets/vendor/owl-carousel-1.3.2/owl-carousel/owl.transitions.css', __FILE__ ) );
-
-		// Compiled
-		wp_enqueue_style( 'owl-carousel-style-main', \plugins_url( '/assets/css/main.min.css', __FILE__ ) );
-	}
-
-
 	public function enqueue_v2() {
 		// Vendor
 		wp_enqueue_script( 'owl-carousel-js', \plugins_url( 'assets/vendor/owl-carousel-2.0.0-beta.2.4.4/owl.carousel.min.js', __FILE__ ), array( 'jquery' ) );
