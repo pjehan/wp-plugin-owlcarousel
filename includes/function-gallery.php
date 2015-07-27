@@ -54,17 +54,22 @@ function owl_carousel_post_gallery( $output, $attr ) {
 		$attr['items'] = '1';
 	}
 
+    // owl_custom_default_atts filter
+	$attr = apply_filters( 'owl_custom_default_atts', $attr, array() );
+
 	$data_attr = "";
+
 	foreach ( $attr as $key => $value ) {
 		if ( $key != "category" ) {
-			$data_attr .= ' data-' . $key . '="' . $value . '" ';
+			$data_attr .= ' data-' . strtolower( $key ) . '="' . $value . '" ';
 		}
 	}
 
 	$output .= '<div id="owl-carousel-' . rand() . '" class="owl-carousel-plugin" ' . $data_attr . '>';
 
 	foreach ( $attachments as $id => $attachment ) {
-		$img = wp_get_attachment_image_src( $id, 'full' );
+        $size = apply_filters( 'owl_carousel_wp_gallery_thumbnail_size', 'full' );
+		$img = wp_get_attachment_image_src( $id, $size );
 		$meta_link = get_post_meta( $id, '_owlurl', true );
 
 		$title = $attachment->post_title;
