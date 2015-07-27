@@ -15,7 +15,8 @@ class Admin {
 		$this->plugin = Main::instance();
 
 		// Register the menu page
-		add_action( 'admin_menu', [ $this, 'submenu_page' ] );
+		add_action( 'admin_menu', [ $this, 'owl_submenu_page' ] );
+		add_action( 'admin_init', [ $this, 'display_settings_fields' ] );
 
 		// Scripts
 		add_action( 'wp_enqueue_scripts',  [ $this, 'enqueue_v2' ] );
@@ -27,53 +28,77 @@ class Admin {
 	 * Add a submenu page in the admin
 	 * @return void
 	 */
-	public function submenu_page() {
+	public function owl_submenu_page() {
 		add_submenu_page(
 			'edit.php?post_type=owl-carousel',
-			__( 'Parameters', 'owl-carousel-domain' ),
-			__( 'Parameters', 'owl-carousel-domain' ),
+			__( 'Settings', Main::TEXT_DOMAIN ),
+			__( 'Settings', Main::TEXT_DOMAIN ),
 			'manage_options',
-			'owl-carousel-parameters',
-			array( $this, 'submenu_parameters' )
+			'owl-carousel-settings',
+			[ $this, 'owl_settings_page' ]
 		);
 	}
 
 	/**
-	 * Add the form and the parameters
-	 * @return void
+	 * Create the form
 	 */
-	function submenu_parameters() {
+	 function owl_settings_page() {
+     	?>
+	 	<div class="wrap">
 
-		$isWordpressGallery = ( filter_var( get_option( 'owl_carousel_wordpress_gallery', false ), FILTER_VALIDATE_BOOLEAN ) ) ? 'checked' : '';
-		$orderBy = get_option( 'owl_carousel_orderby', 'post_date' );
-		$orderByOptions = array( 'post_date', 'title' );
+			<h1><?php _e( 'Owl Carousel Parameters', Main::TEXT_DOMAIN ) ?></h1>
 
-		echo '<div class="wrap owl_carousel_page">';
+			<form method="post" action="options.php">
 
-		echo '<?php update_option("owl_carousel_wordpress_gallery", $_POST["wordpress_gallery"]); ?>';
+				<?php
+				settings_fields( 'gallery-section' );
+				do_settings_sections( 'gallery-options' );
+				submit_button();
+				?>
 
-		echo '<h2>' . __( 'Owl Carousel parameters', 'owl-carousel-domain' ) . '</h2>';
+			</form>
 
-		echo '<form action="' . plugin_dir_url( __FILE__ ) . 'save_parameter.php" method="POST" id="owlcarouselparameterform">';
+		</div>
+    	<?php
+	}
 
-		echo '<h3>' . __( 'Wordpress Gallery', 'owl-carousel-domain' ) . '</h3>';
-		echo '<input type="checkbox" name="wordpress_gallery" ' . $isWordpressGallery . ' />';
-		echo '<label>' . __( 'Use Owl Carousel with Wordpress Gallery', 'owl-carousel-domain' ) . '</label>';
-		echo '<br />';
-		echo '<label>' . __( 'Order Owl Carousel elements by ', 'owl-carousel-domain' ) . '</label>';
-		echo '<select name="orderby" />';
-		foreach ( $orderByOptions as $option ) {
-			echo '<option value="' . $option . '" ' . ( ( $option == $orderBy ) ? 'selected="selected"' : '' ) . '>' . $option . '</option>';
-		}
-		echo '</select>';
-		echo '<br />';
-		echo '<br />';
-		echo '<input type="submit" class="button-primary owl-carousel-save-parameter-btn" value="' . __( 'Save changes', 'owl-carousel-domain' ) . '" />';
-		echo '<span class="spinner"></span>';
+	/**
+	 * Register the settings
+	 */
+	function display_settings_fields() {
 
-		echo '</form>';
+		// Add section
+		add_settings_section( 'gallery-section', __( 'Gallery', Main::TEXT_DOMAIN ), null, 'gallery-options' );
 
-		echo '</div>';
+		// Setting owl_carousel_wordpress_gallery
+		add_settings_field( 'owl_carousel_wordpress_gallery', __( 'Use Owl Carousel with Wordpress Gallery:', Main::TEXT_DOMAIN ), [ $this, 'display_wp_gallery_checkbox' ], 'gallery-options', 'gallery-section' );
+		register_setting( 'gallery-section', 'owl_carousel_wordpress_gallery' );
+
+		// Setting owl_carousel_orderby
+		add_settings_field( 'owl_carousel_orderby', __( 'Order Owl Carousel elements by:', Main::TEXT_DOMAIN ), [ $this, 'display_gallery_order_select' ], 'gallery-options', 'gallery-section' );
+		register_setting( 'gallery-section', 'owl_carousel_orderby' );
+	}
+
+	/**
+	 * Callbacks for the settings fields
+	 */
+	function display_wp_gallery_checkbox() {
+    	?>
+        <input type="checkbox" name="owl_carousel_wordpress_gallery" value="1" <?php checked( 1, get_option( 'owl_carousel_wordpress_gallery' ), true); ?> />
+		<?php
+	}
+
+	function display_gallery_order_select() {
+
+		$orderby_options = array( 'post_date', 'title' );
+		$orderby_value = get_option( 'owl_carousel_orderby', 'post_date' );
+    	?>
+
+		<select name="owl_carousel_orderby" />
+			<?php foreach ( $orderby_options as $option ) : ?>
+				<option value="<?php echo $option; ?>" <?php echo ( ( $option == $orderby_value ) ? 'selected="selected"' : '' ); ?>><?php echo $option; ?></option>
+			<?php endforeach; ?>
+		<?php
 	}
 
 
