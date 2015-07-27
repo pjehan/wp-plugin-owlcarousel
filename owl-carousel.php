@@ -315,8 +315,8 @@ class Main {
 	 * @return array
 	 */
 	public function owl_carousel_attachment_fields_to_save( $post, $attachment ) {
-		if ( isset( $attachment['owlvideo'] ) ) {
-			update_post_meta( $post['ID'], '_owlvideo', $attachment['owlvideo'] );
+		if ( isset( $attachment['owlurl'] ) ) {
+			update_post_meta( $post['ID'], '_owlurl', $attachment['owlurl'] );
 		}
 
 		if ( isset( $attachment['owlvideo'] ) ) {
