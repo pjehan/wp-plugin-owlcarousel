@@ -6,22 +6,35 @@
  * @param type $content
  * @return string Owl HTML code
  */
+
+namespace Owl;
+
+if ( ! defined( 'ABSPATH' ) ) {
+ 	exit;
+ }
+
 function owl_function( $atts, $content = null ) {
-	extract( shortcode_atts( array(
-				'category' => 'Uncategoryzed',
-				'size' => 'owl-full-width'
-			), $atts ) );
+
+	// Default attributes
+	$default_atts = array(
+		'category' => 'Uncategorized',
+		'size' => 'owl-full-width',
+	);
+
+	// owl_custom_default_atts filter
+	$atts = apply_filters( 'owl_custom_default_atts', $atts, $default_atts );
 
 	$data_attr = "";
 
 	foreach ( $atts as $key => $value ) {
 		if ( $key != "category" ) {
-			$data_attr .= ' data-' . $key . '="' . $value . '" ';
+			$data_attr .= ' data-' . strtolower( $key ) . '="' . $value . '" ';
 		}
 	}
 
 	$lazyLoad = array_key_exists( "lazyload", $atts ) && $atts["lazyload"] == true;
 
+	// Loop
 	$args = array(
 		'post_type' => 'owl-carousel',
 		'orderby' => get_option( 'owl_carousel_orderby', 'post_date' ),
@@ -38,18 +51,29 @@ function owl_function( $atts, $content = null ) {
 
 	$result = '<div id="owl-carousel-' . rand() . '" class="owl-carousel-plugin" ' . $data_attr . '>';
 
-	$loop = new WP_Query( $args );
+	$loop = new \WP_Query( $args );
 	while ( $loop->have_posts() ) {
-		$loop->the_post();
-		$img_src = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), $atts['size'] );
 
+		$loop->the_post();
+		$size = isset( $atts['size'] ) ? $atts['size'] : 'full';
+		$img_src = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), $size );
+
+		// owl_image_link filter
 		$meta_link = apply_filters( 'owl_image_link', get_post_meta( get_post_thumbnail_id( get_the_ID() ), '_owlurl', true ) );
+
+		// owl_video_link filter
+		$video_link = apply_filters( 'owl_video_link', get_post_meta( get_post_thumbnail_id( get_the_ID() ), '_owlvideo', true ) );
+
+		// owl_item_classes filter
 		$classes = apply_filters( 'owl_item_classes', array(), get_the_ID() );
 
-		$result .= '<div class="item ' . implode( ' ', $classes ) . '">';
+		$result .= '<div class="' . ( ( $video_link ) ? 'item-video' : 'item' ) .' ' . implode( ' ', $classes ) . '">';
 
-		if ( $img_src[0] ) {
-			// $result .= '<div>';
+		if ( $video_link ) {
+
+			$result .= '<a class="owl-video" href="' . $video_link . '"></a>';
+
+		} elseif ( $img_src[0] ) {
 
 			if ( ! empty( $meta_link ) ) {
 				$result .= '<a href="'. $meta_link .'">';
@@ -58,7 +82,7 @@ function owl_function( $atts, $content = null ) {
 			if ( $lazyLoad ) {
 				$result .= '<img class="lazyOwl" title="' . get_the_title() . '" data-src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
 			} else {
-				// $result .= '<img title="' . get_the_title() . '" src="' . $img_src[0] . '" alt="' . get_the_title() . '"/>';
+
 				$result .= '<div class="image" style="
 								background-image: url(' . $img_src[0] . ');
 								background-size: cover;
@@ -82,9 +106,9 @@ function owl_function( $atts, $content = null ) {
 			$img_overlay  .= '<div class="owl-item-content">' . apply_filters( 'owl_carousel_img_overlay_content', $slide_content, get_the_ID() ) . '</div>';
 			$img_overlay  .= '</div>';
 
+			// owlcarousel_img_overlay filter
 			$result .= apply_filters( 'owlcarousel_img_overlay', $img_overlay, $slide_title, $slide_content, $meta_link );
 
-			// $result .= '</div>';
 		}
 		else {
 			$result .= '<div class="owl-item-text">' . apply_filters( 'owl_carousel_img_overlay_content', get_the_content() ) . '</div>';
@@ -96,88 +120,4 @@ function owl_function( $atts, $content = null ) {
 	return $result;
 }
 
-add_shortcode( 'owl-carousel', 'owl_function' );
-
-
-/**
- * Owl Carousel for Wordpress image gallery
- * @param string $output Gallery output
- * @param array $attr Parameters
- * @return string Owl HTML code
- */
-function owl_carousel_post_gallery( $output, $attr ) {
-	global $post;
-
-	if ( isset( $attr['orderby'] ) ) {
-		$attr['orderby'] = sanitize_sql_orderby( $attr['orderby'] );
-		if ( !$attr['orderby'] )
-			unset( $attr['orderby'] );
-	}
-
-	extract( shortcode_atts( array(
-				'order' => 'ASC',
-				'orderby' => 'menu_order ID',
-				'id' => $post->ID,
-				'itemtag' => 'dl',
-				'icontag' => 'dt',
-				'captiontag' => 'dd',
-				'columns' => 3,
-				'size' => 'thumbnail',
-				'include' => '',
-				'exclude' => ''
-			), $attr ) );
-
-	$id = intval( $id );
-	if ( 'RAND' == $order ) $orderby = 'none';
-
-	if ( !empty( $include ) ) {
-		$include = preg_replace( '/[^0-9,]+/', '', $include );
-		$_attachments = get_posts( array( 'include' => $include, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby ) );
-
-		$attachments = array();
-		foreach ( $_attachments as $key => $val ) {
-			$attachments[$val->ID] = $_attachments[$key];
-		}
-	}
-
-	if ( empty( $attachments ) ) return '';
-
-	// Add item number if not defined
-	if ( !isset( $attr['items'] ) ) {
-		$attr['items'] = '1';
-	}
-
-	$data_attr = "";
-	foreach ( $attr as $key => $value ) {
-		if ( $key != "category" ) {
-			$data_attr .= ' data-' . $key . '="' . $value . '" ';
-		}
-	}
-
-	$output .= '<div id="owl-carousel-' . rand() . '" class="owl-carousel" ' . $data_attr . '>';
-
-	foreach ( $attachments as $id => $attachment ) {
-		$img = wp_get_attachment_image_src( $id, 'full' );
-		$meta_link = get_post_meta( $id, '_owlurl', true );
-
-		$title = $attachment->post_title;
-
-		$output .= "<div class=\"item\">";
-		if ( !empty( $meta_link ) ) {
-			$output .= "<a href=\"" . $meta_link . "\">";
-		}
-		$output .= "<img src=\"{$img[0]}\" width=\"{$img[1]}\" height=\"{$img[2]}\" alt=\"$title\" />\n";
-		if ( !empty( $meta_link ) ) {
-			$output .= "</a>";
-		}
-		$output .= "</div>";
-	}
-
-	$output .= "</div>";
-
-	return $output;
-}
-
-if ( filter_var( get_option( 'owl_carousel_wordpress_gallery', false ), FILTER_VALIDATE_BOOLEAN ) ) {
-	add_filter( 'post_gallery', 'owl_carousel_post_gallery', 10, 2 );
-}
+add_shortcode( 'owl-carousel', 'Owl\owl_function' );
