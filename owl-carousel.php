@@ -2,119 +2,32 @@
 /*
 Plugin Name: Owl Carousel
 Description: A simple plugin to include an Owl Carousel in any post
-Author: Pierre Jehan
+Author:  Peytz & Co (Rasmus Taarnby, Kristoffe Biglete)
 Contributors: Rasmus Taarnby
-Version: 1.0.4
+Version: 2.0.2
 Text Domain: owl-carousel
 Domain Path: /languages
-Author URI: http://www.pierre-jehan.com
+Author URI: http://peytz.dk/medarbejdere/
 Licence: GPL2
 */
 
-namespace Owl;
-
-/**
- * Do not access this file directly
- */
+// Do not access this file directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Main class
- */
-class Main {
-
+// Check version as we use version specific methods
+if ( version_compare( '5.4.0', PHP_VERSION, '<=' ) ) {
+	require( plugin_dir_path( __FILE__ ) . '/init.php' );
+} else {
+	// Plugin is activated but nothing is loaded
 	/**
-	 * Text domain for translators
+	 * Output PHP error message.
 	 */
-	const TEXT_DOMAIN = 'owl-carousel';
-
-	/**
-	 * @var object Instance of this class.
-	 */
-	private static $instance;
-
-	/**
-	 * @var string Plugins directory for this plugin.
-	 */
-	public $plugin_dir;
-
-	/**
-	 * @var string Plugins url for this plugin.
-	 */
-	public $plugin_url;
-
-	/**
-	 * @var string Lang dir for this plugin.
-	 */
-	public $lang_dir;
-
-	/**
-	 * @var array Objects of this class.
-	 */
-	public $objects = array();
-
-	/**
-	 * Do not load this more than once.
-	 */
-	private function __construct() {}
-
-	/**
-	 * Returns the instance of this class.
-	 */
-	public static function instance() {
-		if( ! isset( self::$instance ) ) {
-			self::$instance = new self;
-			self::$instance->setup();
-			self::$instance->includes();
-			self::$instance->run();
-		}
-
-		return self::$instance;
+	function pco_kint_php_error_admin_notice() {
+		echo '<div class="error">';
+		echo '<p>Unfortunately, <a href="' . admin_url( 'plugins.php#owl-carousel' ) . '">Owl Carousel</a> can not run on PHP versions older than 5.4.0 Read more information about <a href="http://www.wpupdatephp.com/update/" target="_blank">how you can update</a>.</p>';
+		echo '</div>';
 	}
-
-	/**
-	 * General setup.
-	 */
-	private function setup() {
-		$this->file       = __FILE__;
-		$this->basename   = plugin_basename( $this->file );
-		$this->plugin_url = plugin_dir_url( $this->file );
-		$this->plugin_dir = plugin_dir_path( $this->file );
-		$this->rel_dir    = dirname( $this->basename );
-		$this->lang_dir   = $this->rel_dir . '/languages';
-
-		load_plugin_textdomain( $this::TEXT_DOMAIN, false, $this->lang_dir );
-	}
-
-	/**
-	 * Include files.
-	 */
-	private function includes() {
-		include_once( 'includes/class-admin.php' );
-		include_once( 'includes/class-post-type.php' );
-		include_once( 'includes/function-shortcode.php' );
-		include_once( 'includes/function-gallery.php' );
-		include_once( 'includes/function-widgets.php' );
-		include_once( 'includes/tinymce.php' );
-	}
-
-	/**
-	 * Run classes.
-	 */
-	public function run() {
-		$admin = new Admin();
-		$post_type = new Post_Type();
-	}
-
-} // end class
-
-/**
- * Returns the main instance
- */
-function main() {
-	return Main::instance();;
+	add_action( 'admin_notices', 'pco_kint_php_error_admin_notice' );
 }
-
-main();
