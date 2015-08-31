@@ -31,8 +31,11 @@ function owl_carousel_post_gallery( $output, $attr ) {
 	$data_attr = "";
 
 	foreach ( $attr as $key => $value ) {
-		if ( $key != "category" ) {
+		if ( $key != 'category' ) {
 			$data_attr .= ' data-' . strtolower( $key ) . '="' . $value . '" ';
+		}
+        if ( $key === 'columns' ) {
+			$data_attr .= ' data-items' . '="' . $value . '" ';
 		}
 	}
 
@@ -96,12 +99,12 @@ function get_gallery_attachments( $attr ) {
 	extract( shortcode_atts(
         array(
     		'order'      => 'ASC',
-    		'orderby'    => 'menu_order ID',
+    		'orderby'    => 'menu_order',
     		'id'         => $post->ID,
     		'itemtag'    => 'dl',
     		'icontag'    => 'dt',
     		'captiontag' => 'dd',
-    		'columns'    => 3,
+    		'columns'    => $attr['columns'],
     		'size'       => 'thumbnail',
     		'include'    => '',
     		'exclude'    => ''
