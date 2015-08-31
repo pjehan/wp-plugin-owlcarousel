@@ -1,11 +1,15 @@
 .owl-carousel{
+	position: relative;
+	overflow-x: hidden;
+	background: rgba( 0, 0, 0, 0.05 );
+
 	.item{
 		.image{
 			background-size: cover;
 			margin: auto;
 			background-repeat: no-repeat;
 			width: 100%;
-			max-height: 450px;
+			max-height: 50vh;
 			background-position: 50%;
 
 			@media only screen and (max-width: 40em) {
@@ -34,11 +38,13 @@
 		    // text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 		}
 
-		.owl-item-title{}
-
-		.owl-item-content{}
-
-		.owl-item-text{}
+		.caption {
+			background-color: rgba( 255, 255, 255, 0.7 );
+			position: absolute;
+			top: 30px;
+			padding: 4px 15px 4px 25px;
+			font-size: 0.8rem;
+		}
 
 		&:hover{
 			.owl-item-overlay{
@@ -48,10 +54,42 @@
 	    }
 	}
 
+	.owl-nav {
+		position: absolute;
+		top: 50%;
+		left: 0;
+		color: #d6d6d6;
+		width: 100%;
+
+		.owl-prev {
+			float: left;
+			margin: 0 10px;
+			font-size: 0;
+
+			&::before {
+				content: '\25C0';
+				font-size: 2rem;
+			}
+		}
+
+		.owl-next {
+			float: right;
+			margin: 0 10px;
+			font-size: 0;
+
+			&::after {
+				content: '\25B6';
+				font-size: 2rem;
+			}
+		}
+	}
+
 	.owl-controls{
 		margin-top: 0;
+		width: 100%;
+		overflow: hidden;
 
-		.owl-pagination{
+		.owl-dots{
 			text-align: center;
 			margin-top: 10px;
 			position: absolute;
@@ -59,7 +97,7 @@
 			left: 50%;
 			width: 100%;
 
-		    .owl-page{
+		    .owl-dot{
 				display: inline-block;
 				position: relative;
 				left: -50%;
