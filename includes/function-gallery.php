@@ -46,7 +46,8 @@ function owl_carousel_post_gallery( $output, $attr ) {
 	foreach ( $attachments as $id => $attachment ) {
 
         // Values
-        $size = apply_filters( 'owl_carousel_wp_gallery_thumbnail_size', 'full' );
+        $default_size = apply_filters( 'owl_carousel_wp_gallery_thumbnail_size', 'full' );
+        $size = ( $attr['size'] ) ? $attr['size'] : $default_size;
 		$img = wp_get_attachment_image_src( $id, $size );
 		$meta_link = get_post_meta( $id, '_owlurl', true );
 		$title = $attachment->post_title;
@@ -100,13 +101,13 @@ function get_gallery_attachments( $attr ) {
 	extract( shortcode_atts(
         array(
     		'order'      => 'ASC',
-    		'orderby'    => 'menu_order',
+    		'orderby'    => ( $attr['orderby'] ) ? $attr['orderby'] : 'menu_order',
     		'id'         => $post->ID,
     		'itemtag'    => 'dl',
     		'icontag'    => 'dt',
     		'captiontag' => 'dd',
-    		'columns'    => $attr['columns'],
-    		'size'       => 'thumbnail',
+    		'columns'    => 'columns',
+    		'size'       => ( $attr['size'] ) ? $attr['size'] : 'thumbnail',
     		'include'    => '',
     		'exclude'    => ''
         ), $attr ) );
@@ -131,12 +132,13 @@ function get_gallery_attachments( $attr ) {
  function owl_default_atts( $atts, $default ) {
 
 	 $custom = array(
-		  'items' => ( $atts['columns'] ) ? $atts['columns'] : '1',
+		  'items' => '1',
 		  'size' => ( $atts['size'] ) ? $atts['size'] : 'large',
 		  'autoplay' => 'true',
           'nav' => 'true',
 		  'dots' => 'true',
 		  'loop' => 'true',
+          'autoheight' => 'true',
 		  'autoplayhoverpause' => 'true',
 	 );
 
