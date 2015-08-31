@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 if ( filter_var( get_option( 'owl_carousel_wordpress_gallery', false ), FILTER_VALIDATE_BOOLEAN ) ) {
  	add_filter( 'post_gallery', 'Owl\owl_carousel_post_gallery', 10, 2 );
+    add_filter( 'owl_custom_default_atts', 'Owl\owl_default_atts', 10, 2 );
 }
 
 
@@ -32,11 +33,11 @@ function owl_carousel_post_gallery( $output, $attr ) {
 
 	foreach ( $attr as $key => $value ) {
 		if ( $key != 'category' ) {
-			$data_attr .= ' data-' . strtolower( $key ) . '="' . $value . '" ';
-		}
+            $data_attr .= ' data-' . strtolower( $key ) . '="' . $value . '" ';
+        }
         if ( $key === 'columns' ) {
-			$data_attr .= ' data-items' . '="' . $value . '" ';
-		}
+            $data_attr .= ' data-items' . '="' . $value . '" ';
+        }
 	}
 
 	// Start the output
@@ -122,4 +123,24 @@ function get_gallery_attachments( $attr ) {
 	}
 
 	return $attachments;
+}
+
+/**
+ * Owl default attributes
+ */
+ function owl_default_atts( $atts, $default ) {
+
+	 $custom = array(
+		  'items' => ( $atts['columns'] ) ? $atts['columns'] : '1',
+		  'size' => ( $atts['size'] ) ? $atts['size'] : 'large',
+		  'autoplay' => 'true',
+          'nav' => 'true',
+		  'dots' => 'true',
+		  'loop' => 'true',
+		  'autoplayhoverpause' => 'true',
+	 );
+
+	 $atts = array_merge( $default, $custom, $atts );
+
+	 return $atts;
 }
