@@ -138,7 +138,6 @@ function get_gallery_attachments( $attr ) {
           'nav' => 'true',
 		  'dots' => 'true',
 		  'loop' => 'true',
-          'autoheight' => 'true',
 		  'autoplayhoverpause' => 'true',
 	 );
 
