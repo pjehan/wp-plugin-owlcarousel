@@ -108,7 +108,7 @@ function get_gallery_attachments( $attr ) {
             'itemtag'    => 'dl',
             'icontag'    => 'dt',
             'captiontag' => 'dd',
-            'columns'    => 'columns',
+            'columns'    => ( $attr['columns'] ) ? $attr['columns'] : '1',
             'size'       => ( $attr['size'] ) ? $attr['size'] : 'thumbnail',
             'include'    => '',
             'exclude'    => ''
@@ -134,8 +134,8 @@ function get_gallery_attachments( $attr ) {
 function owl_default_atts( $atts, $default ) {
 
     $custom = array(
-        'items' => '1',
-        'size' => ( $atts['size'] ) ? $atts['size'] : 'large',
+        'columns'    => ( isset( $atts['columns'] ) ) ? $atts['columns'] : '1',
+        'size' => ( isset( $atts['size'] ) ) ? $atts['size'] : 'large',
         'autoplay' => 'true',
         'nav' => 'true',
         'dots' => 'true',

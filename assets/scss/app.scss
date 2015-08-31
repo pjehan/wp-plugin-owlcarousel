@@ -131,3 +131,29 @@
 .owl-carousel-item-text {
     text-align: center;
 }
+
+.owl_widget {
+	.owl-carousel {
+		height: 100%;
+	}
+
+	.owl-stage-outer {
+		position: relative;
+		overflow-x: hidden;
+	}
+
+
+
+	h3 {
+		display: none;
+	}
+
+	.item {
+		height: 100%;
+		position: relative;
+
+		.image {
+			max-height: 100%;
+		}
+	}
+}

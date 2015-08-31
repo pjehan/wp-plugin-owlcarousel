@@ -21,9 +21,12 @@ class Owl_Widget extends \WP_Widget {
 	 */
 	public function __construct() {
 
+		$options = array( 'step' => 1, 'min' => 1, 'max' => '', 'std' => 1 );
+
 		// Add fields
 		$this->add_field( 'title', 'Enter title', '' );
 		$this->add_field( 'category', 'Enter category', '' );
+		$this->add_field( 'items', 'Enter number of items', '', $options, 'number' );
 		// $this->add_select( 'site', 'Site', $this->get_subsites() );
 
 		// Init the widget
@@ -76,7 +79,7 @@ class Owl_Widget extends \WP_Widget {
 				echo $before_title . $title . $after_title;
 			}
 
-			echo owl_function( array( 'category' => $instance['category'], 'singleItem' => 'true', 'autoPlay' => 'true', 'pagination' => 'true' ) );
+			echo owl_function( array( 'category' => $instance['category'], 'items' => $instance['items'] ) );
 
 		echo $after_widget;
 
@@ -101,6 +104,9 @@ class Owl_Widget extends \WP_Widget {
 
 		// Generate admin for fields
 		foreach( $this->fields as $field_name => $field_data ) {
+
+			$value = isset( $instance[ $field_name ] ) ? $instance[ $field_name ] : $field_data['default_value'];
+
 			if( $field_data['type'] === 'text' ) : ?>
 				<p>
 					<label for="<?php echo $this->get_field_id( $field_name ); ?>"><?php _e( $field_data['description'], Main::TEXT_DOMAIN ); ?></label>
@@ -126,6 +132,12 @@ class Owl_Widget extends \WP_Widget {
 					</select>
 				</p>
 			<?php
+			elseif( $field_data['type'] == 'number' ) : ?>
+				<p>
+					<label for="<?php echo $this->get_field_id( $field_name ); ?>"><?php _e( $field_data['description'], Main::TEXT_DOMAIN ); ?></label>
+					<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( $field_name ) ); ?>" name="<?php echo $this->get_field_name( $field_name ); ?>" type="number" step="<?php echo esc_attr( $field_data['options']['step'] ); ?>" min="<?php echo esc_attr( $field_data['options']['min'] ); ?>" max="<?php echo esc_attr( $field_data['options']['max'] ); ?>" value="<?php echo esc_attr( $value ); ?>" />
+				</p>
+			<?php
 			else:
 				echo __( 'Error - Field type not supported', Main::TEXT_DOMAIN ) . ': ' . $field_data['type'];
 			endif;
@@ -142,11 +154,11 @@ class Owl_Widget extends \WP_Widget {
 	 * @param string $field_type
 	 * @return void
 	 */
-	private function add_field( $field_name, $field_description = '', $field_default_value = '', $field_type = 'text' ) {
+	private function add_field( $field_name, $field_description = '', $field_default_value = '', $field_options = array(), $field_type = 'text' ) {
 		if( ! is_array( $this->fields ) )
 			$this->fields = array();
 
-		$this->fields[$field_name] = array( 'name' => $field_name, 'description' => $field_description, 'default_value' => $field_default_value, 'type' => $field_type );
+		$this->fields[$field_name] = array( 'name' => $field_name, 'description' => $field_description, 'default_value' => $field_default_value, 'options' => $field_options, 'type' => $field_type );
 	}
 
 
@@ -182,6 +194,7 @@ class Owl_Widget extends \WP_Widget {
 		$instance = array();
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		$instance['category'] = strip_tags( $new_instance['category'] );
+		$instance['items'] = strip_tags( $new_instance['items'] );
 
 		return $instance;
 	}
