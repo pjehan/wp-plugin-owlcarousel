@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 */
 if ( filter_var( get_option( 'owl_carousel_wordpress_gallery', false ), FILTER_VALIDATE_BOOLEAN ) ) {
     add_filter( 'post_gallery', 'Owl\owl_carousel_post_gallery', 10, 2 );
-    add_filter( 'owl_custom_default_atts', 'Owl\owl_default_atts', 10, 2 );
+    add_filter( 'owl_custom_default_atts', 'Owl\owl_default_atts', 20, 2 );
 }
 
 
@@ -51,6 +51,8 @@ function owl_carousel_post_gallery( $output, $attr ) {
         $img = wp_get_attachment_image_src( $id, $size );
         $meta_link = get_post_meta( $id, '_owlurl', true );
         $title = $attachment->post_title;
+        $caption = $attachment->post_excerpt;
+
 
         $output .= '<div class="item">';
 
@@ -58,7 +60,9 @@ function owl_carousel_post_gallery( $output, $attr ) {
             $output .= '<a href="' . $meta_link . '">';
         }
 
-        $output .= '<div class="caption">' . $title . '</div>';
+        if ( ! empty( $caption ) ) {
+            $output .= '<div class="caption">' . $caption . '</div>';
+        }
 
         $output .= '<div class="image" style="
             background-image: url(' . $img[0] . ');
@@ -103,13 +107,13 @@ function get_gallery_attachments( $attr ) {
     extract( shortcode_atts(
         array(
             'order'      => 'ASC',
-            'orderby'    => ( $attr['orderby'] ) ? $attr['orderby'] : 'menu_order',
+            'orderby'    => ( ! empty( $attr['orderby'] ) ) ? $attr['orderby'] : 'menu_order',
             'id'         => $post->ID,
             'itemtag'    => 'dl',
             'icontag'    => 'dt',
             'captiontag' => 'dd',
-            'columns'    => ( $attr['columns'] ) ? $attr['columns'] : '1',
-            'size'       => ( $attr['size'] ) ? $attr['size'] : 'thumbnail',
+            'columns'    => ( ! empty( $attr['columns'] ) ) ? $attr['columns'] : '1',
+            'size'       => ( ! empty( $attr['size'] ) ) ? $attr['size'] : 'thumbnail',
             'include'    => '',
             'exclude'    => ''
         ), $attr ) );
