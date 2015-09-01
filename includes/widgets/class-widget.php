@@ -56,33 +56,11 @@ class Owl_Widget extends \WP_Widget {
 		if( ! empty( $title ) )
 			echo $args['before_title'] . $title . $args['after_title'];
 
-		/* Widget output here */
-		$this->widget_output( $args, $instance );
+			/* Widget output here */
+			echo owl_function( array( 'category' => $instance['category'], 'items' => $instance['items'] ) );
 
 		/* After widget */
 		echo $args['after_widget'];
-	}
-
-
-	/**
-	 * This function will execute the widget frontend logic.
-	 * Everything you want in the widget should be output here.
-	 */
-	private function widget_output( $args, $instance ) {
-		extract( $args );
-
-		$title = apply_filters( 'widget_title', $instance['title'] );
-
-		echo $before_widget;
-
-			if ( ! empty( $title ) ) {
-				echo $before_title . $title . $after_title;
-			}
-
-			echo owl_function( array( 'category' => $instance['category'], 'items' => $instance['items'] ) );
-
-		echo $after_widget;
-
 	}
 
 
