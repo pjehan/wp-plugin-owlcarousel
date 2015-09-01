@@ -24,10 +24,9 @@ class Owl_Widget extends \WP_Widget {
 		$options = array( 'step' => 1, 'min' => 1, 'max' => '', 'std' => 1 );
 
 		// Add fields
-		$this->add_field( 'title', 'Enter title', '' );
-		$this->add_field( 'category', 'Enter category', '' );
+		$this->add_field( 'title', 'Enter title' );
+		$this->add_field( 'category', 'Enter category', '', '', 'select-cat' );
 		$this->add_field( 'items', 'Enter number of items', '', $options, 'number' );
-		// $this->add_select( 'site', 'Site', $this->get_subsites() );
 
 		// Init the widget
 		parent::__construct(
@@ -57,7 +56,10 @@ class Owl_Widget extends \WP_Widget {
 			echo $args['before_title'] . $title . $args['after_title'];
 
 			/* Widget output here */
-			echo owl_function( array( 'category' => $instance['category'], 'items' => $instance['items'] ) );
+			echo owl_function( array(
+				'category' => get_term_by( 'id', $instance['category'], 'Carousel' ),
+				'items' => $instance['items']
+			) );
 
 		/* After widget */
 		echo $args['after_widget'];
@@ -93,9 +95,20 @@ class Owl_Widget extends \WP_Widget {
 			<?php
 			elseif( $field_data['type'] == 'select' ) : ?>
 				<p>
-					<select name="<?php echo $this->get_field_name( $field_name ); ?>" id="subsites">
+					<select name="<?php echo $this->get_field_name( $field_name ); ?>" id="select-options">
 					<?php foreach( $field_data['options'] as $key => $value ) : ?>
-						<option value="<?php echo $key; ?>" <?php selected( $instance['site'], $key ); ?>><?php echo $value; ?></option>
+						<option value="<?php echo $key; ?>" <?php selected( $instance[$field_name], $key ); ?>><?php echo $value; ?></option>
+					<?php endforeach; ?>
+					</select>
+				</p>
+			<?php
+			elseif( $field_data['type'] == 'select-cat' ) : ?>
+				<?php $terms = get_terms( 'Carousel' ); ?>
+				<p>
+					<label for="<?php echo $this->get_field_id( $field_name ); ?>"><?php _e( $field_data['description'], Main::TEXT_DOMAIN ); ?></label><br />
+					<select name="<?php echo $this->get_field_name( $field_name ); ?>" id="taxonomies">
+					<?php foreach( $terms as $key => $value ) : ?>
+						<option value="<?php echo $value->term_id; ?>" <?php selected( $instance[$field_name], $value->term_id ); ?>><?php echo $value->name; ?></option>
 					<?php endforeach; ?>
 					</select>
 				</p>
