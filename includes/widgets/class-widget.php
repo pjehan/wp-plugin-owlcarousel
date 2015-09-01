@@ -21,10 +21,12 @@ class Owl_Widget extends \WP_Widget {
 	 */
 	public function __construct() {
 
+		$options = array( 'step' => 1, 'min' => 1, 'max' => '', 'std' => 1 );
+
 		// Add fields
-		$this->add_field( 'title', 'Enter title', '' );
-		$this->add_field( 'category', 'Enter category', '' );
-		// $this->add_select( 'site', 'Site', $this->get_subsites() );
+		$this->add_field( 'title', 'Enter title' );
+		$this->add_field( 'category', 'Enter category', '', '', 'select-cat' );
+		$this->add_field( 'items', 'Enter number of items', '', $options, 'number' );
 
 		// Init the widget
 		parent::__construct(
@@ -53,33 +55,14 @@ class Owl_Widget extends \WP_Widget {
 		if( ! empty( $title ) )
 			echo $args['before_title'] . $title . $args['after_title'];
 
-		/* Widget output here */
-		$this->widget_output( $args, $instance );
+			/* Widget output here */
+			echo owl_function( array(
+				'category' => get_term_by( 'id', $instance['category'], 'Carousel' ),
+				'items' => $instance['items']
+			) );
 
 		/* After widget */
 		echo $args['after_widget'];
-	}
-
-
-	/**
-	 * This function will execute the widget frontend logic.
-	 * Everything you want in the widget should be output here.
-	 */
-	private function widget_output( $args, $instance ) {
-		extract( $args );
-
-		$title = apply_filters( 'widget_title', $instance['title'] );
-
-		echo $before_widget;
-
-			if ( ! empty( $title ) ) {
-				echo $before_title . $title . $after_title;
-			}
-
-			echo owl_function( array( 'category' => $instance['category'], 'singleItem' => 'true', 'autoPlay' => 'true', 'pagination' => 'true' ) );
-
-		echo $after_widget;
-
 	}
 
 
@@ -101,6 +84,9 @@ class Owl_Widget extends \WP_Widget {
 
 		// Generate admin for fields
 		foreach( $this->fields as $field_name => $field_data ) {
+
+			$value = isset( $instance[ $field_name ] ) ? $instance[ $field_name ] : $field_data['default_value'];
+
 			if( $field_data['type'] === 'text' ) : ?>
 				<p>
 					<label for="<?php echo $this->get_field_id( $field_name ); ?>"><?php _e( $field_data['description'], Main::TEXT_DOMAIN ); ?></label>
@@ -109,9 +95,20 @@ class Owl_Widget extends \WP_Widget {
 			<?php
 			elseif( $field_data['type'] == 'select' ) : ?>
 				<p>
-					<select name="<?php echo $this->get_field_name( $field_name ); ?>" id="subsites">
+					<select name="<?php echo $this->get_field_name( $field_name ); ?>" id="select-options">
 					<?php foreach( $field_data['options'] as $key => $value ) : ?>
-						<option value="<?php echo $key; ?>" <?php selected( $instance['site'], $key ); ?>><?php echo $value; ?></option>
+						<option value="<?php echo $key; ?>" <?php selected( $instance[$field_name], $key ); ?>><?php echo $value; ?></option>
+					<?php endforeach; ?>
+					</select>
+				</p>
+			<?php
+			elseif( $field_data['type'] == 'select-cat' ) : ?>
+				<?php $terms = get_terms( 'Carousel' ); ?>
+				<p>
+					<label for="<?php echo $this->get_field_id( $field_name ); ?>"><?php _e( $field_data['description'], Main::TEXT_DOMAIN ); ?></label><br />
+					<select name="<?php echo $this->get_field_name( $field_name ); ?>" id="taxonomies">
+					<?php foreach( $terms as $key => $value ) : ?>
+						<option value="<?php echo $value->term_id; ?>" <?php selected( $instance[$field_name], $value->term_id ); ?>><?php echo $value->name; ?></option>
 					<?php endforeach; ?>
 					</select>
 				</p>
@@ -124,6 +121,12 @@ class Owl_Widget extends \WP_Widget {
 						<option value="<?php echo $menu['term_id']; ?>" <?php selected( $instance['menu'], $menu['term_id'] ); ?>><?php echo $menu['name']; ?></option>
 					<?php endforeach; ?>
 					</select>
+				</p>
+			<?php
+			elseif( $field_data['type'] == 'number' ) : ?>
+				<p>
+					<label for="<?php echo $this->get_field_id( $field_name ); ?>"><?php _e( $field_data['description'], Main::TEXT_DOMAIN ); ?></label>
+					<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( $field_name ) ); ?>" name="<?php echo $this->get_field_name( $field_name ); ?>" type="number" step="<?php echo esc_attr( $field_data['options']['step'] ); ?>" min="<?php echo esc_attr( $field_data['options']['min'] ); ?>" max="<?php echo esc_attr( $field_data['options']['max'] ); ?>" value="<?php echo esc_attr( $value ); ?>" />
 				</p>
 			<?php
 			else:
@@ -142,11 +145,11 @@ class Owl_Widget extends \WP_Widget {
 	 * @param string $field_type
 	 * @return void
 	 */
-	private function add_field( $field_name, $field_description = '', $field_default_value = '', $field_type = 'text' ) {
+	private function add_field( $field_name, $field_description = '', $field_default_value = '', $field_options = array(), $field_type = 'text' ) {
 		if( ! is_array( $this->fields ) )
 			$this->fields = array();
 
-		$this->fields[$field_name] = array( 'name' => $field_name, 'description' => $field_description, 'default_value' => $field_default_value, 'type' => $field_type );
+		$this->fields[$field_name] = array( 'name' => $field_name, 'description' => $field_description, 'default_value' => $field_default_value, 'options' => $field_options, 'type' => $field_type );
 	}
 
 
@@ -182,6 +185,7 @@ class Owl_Widget extends \WP_Widget {
 		$instance = array();
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		$instance['category'] = strip_tags( $new_instance['category'] );
+		$instance['items'] = strip_tags( $new_instance['items'] );
 
 		return $instance;
 	}
