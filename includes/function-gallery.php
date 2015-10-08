@@ -56,8 +56,8 @@ function owl_carousel_post_gallery( $output, $attr ) {
 
         $output .= '<div class="item">';
 
-        if ( ! empty( $meta_link ) ) {
-            $output .= '<a href="' . $meta_link . '">';
+        if ( $attr['link'] == "file" ) {
+            $output .= '<a href="' . $img[0] . '">';
         }
 
         if ( ! empty( $caption ) ) {
