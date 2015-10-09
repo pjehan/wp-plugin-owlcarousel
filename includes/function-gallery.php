@@ -58,6 +58,8 @@ function owl_carousel_post_gallery( $output, $attr ) {
 
         if ( $attr['link'] == "file" ) {
             $output .= '<a href="' . $img[0] . '">';
+        } elseif ( ! empty( $meta_link ) ) {
+            $output .= '<a href="' . $meta_link . '">';
         }
 
         if ( ! empty( $caption ) ) {
@@ -73,7 +75,9 @@ function owl_carousel_post_gallery( $output, $attr ) {
             padding-top:' . $img[2] / $img[1] * 100 . '%;
             "></div>';
 
-        if ( ! empty( $meta_link ) ) {
+        if ( $attr['link'] == "file" ) {
+            $output .= '</a>';
+        } elseif ( ! empty( $meta_link ) ) {
             $output .= '</a>';
         }
 
