@@ -49,6 +49,7 @@ function owl_carousel_post_gallery( $output, $attr ) {
         $default_size = apply_filters( 'owl_carousel_wp_gallery_thumbnail_size', 'full' );
         $size = ( $attr['size'] ) ? $attr['size'] : $default_size;
         $img = wp_get_attachment_image_src( $id, $size );
+        $link = isset( $attr['link'] ) ? $attr['link'] : false;
         $meta_link = get_post_meta( $id, '_owlurl', true );
         $title = $attachment->post_title;
         $caption = $attachment->post_excerpt;
@@ -56,7 +57,7 @@ function owl_carousel_post_gallery( $output, $attr ) {
 
         $output .= '<div class="item">';
 
-        if ( $attr['link'] == "file" ) {
+        if ( $link ) {
             $output .= '<a href="' . $img[0] . '">';
         } elseif ( ! empty( $meta_link ) ) {
             $output .= '<a href="' . $meta_link . '">';
@@ -75,7 +76,7 @@ function owl_carousel_post_gallery( $output, $attr ) {
             padding-top:' . $img[2] / $img[1] * 100 . '%;
             "></div>';
 
-        if ( $attr['link'] == "file" ) {
+        if ( $link ) {
             $output .= '</a>';
         } elseif ( ! empty( $meta_link ) ) {
             $output .= '</a>';
