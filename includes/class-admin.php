@@ -74,6 +74,10 @@ class Admin {
 		add_settings_field( 'owl_carousel_wordpress_gallery', __( 'Use Owl Carousel with Wordpress Gallery:', Main::TEXT_DOMAIN ), [ $this, 'display_wp_gallery_checkbox' ], 'gallery-options', 'gallery-section' );
 		register_setting( 'gallery-section', 'owl_carousel_wordpress_gallery' );
 
+		// Setting owl_carousel_fullscreen
+		add_settings_field( 'owl_carousel_fullscreen', __( 'Allow fullscreen display of images when clicking on a slide:', Main::TEXT_DOMAIN ), [ $this, 'display_fullscreen_checkbox' ], 'gallery-options', 'gallery-section' );
+		register_setting( 'gallery-section', 'owl_carousel_fullscreen' );
+
 		// Setting owl_carousel_orderby
 		add_settings_field( 'owl_carousel_orderby', __( 'Order Owl Carousel elements by:', Main::TEXT_DOMAIN ), [ $this, 'display_gallery_order_select' ], 'gallery-options', 'gallery-section' );
 		register_setting( 'gallery-section', 'owl_carousel_orderby' );
@@ -85,6 +89,12 @@ class Admin {
 	function display_wp_gallery_checkbox() {
     	?>
         <input type="checkbox" name="owl_carousel_wordpress_gallery" value="1" <?php checked( 1, get_option( 'owl_carousel_wordpress_gallery' ), true); ?> />
+		<?php
+	}
+
+	function display_fullscreen_checkbox() {
+    	?>
+        <input type="checkbox" name="owl_carousel_fullscreen" value="1" <?php checked( 1, get_option( 'owl_carousel_fullscreen' ), true); ?> />
 		<?php
 	}
 
@@ -110,13 +120,13 @@ class Admin {
 		wp_enqueue_script( 'owl-carousel-js', $this->plugin->plugin_url . 'assets/vendor/owl-carousel-2.0.0-beta.2.4.4/owl.carousel.min.js', array( 'jquery' ) );
 
 		// Compiled
-		wp_enqueue_script( 'owl-carousel-js-script', $this->plugin->plugin_url . '/assets/js/scripts.min.js' );
+		wp_enqueue_script( 'owl-carousel-js-script', $this->plugin->plugin_url . 'assets/js/scripts.min.js' );
 
 		// Vendor
 		wp_enqueue_style( 'owl-carousel-style', $this->plugin->plugin_url . 'assets/vendor/owl-carousel-2.0.0-beta.2.4.4/assets/owl.carousel.css' );
 
 		// Compiled
-		wp_enqueue_style( 'owl-carousel-style-main', $this->plugin->plugin_url . '/assets/css/main.min.css' );
+		wp_enqueue_style( 'owl-carousel-style-main', $this->plugin->plugin_url . 'assets/css/main.min.css' );
 	}
 
 

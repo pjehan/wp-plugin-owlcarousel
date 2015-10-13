@@ -29,7 +29,7 @@ function owl_carousel_post_gallery( $output, $attr ) {
     // owl_custom_default_atts filter
     $attr = apply_filters( 'owl_custom_default_atts', $attr, array() );
 
-    $data_attr = "";
+    $data_attr = '';
 
     foreach ( $attr as $key => $value ) {
         if ( $key != 'category' ) {
@@ -40,8 +40,11 @@ function owl_carousel_post_gallery( $output, $attr ) {
         }
     }
 
+    // Fullscreen
+    $fullscreen = get_option( 'owl_carousel_fullscreen', false );
+
     // Start the output
-    $output .= '<div id="owl-carousel-' . rand() . '" class="owl-carousel-plugin" ' . $data_attr . '>';
+    $output .= '<div id="owl-carousel-' . rand() . '" class="owl-carousel-plugin ' . ( ( $fullscreen ) ? 'fullscreen' : '' ) . '" ' . $data_attr . '>';
 
     foreach ( $attachments as $id => $attachment ) {
 
@@ -49,14 +52,16 @@ function owl_carousel_post_gallery( $output, $attr ) {
         $default_size = apply_filters( 'owl_carousel_wp_gallery_thumbnail_size', 'full' );
         $size = ( $attr['size'] ) ? $attr['size'] : $default_size;
         $img = wp_get_attachment_image_src( $id, $size );
+        $link = isset( $attr['link'] ) ? $attr['link'] : false;
         $meta_link = get_post_meta( $id, '_owlurl', true );
         $title = $attachment->post_title;
         $caption = $attachment->post_excerpt;
 
-
         $output .= '<div class="item">';
 
-        if ( ! empty( $meta_link ) ) {
+        if ( $link || $fullscreen ) {
+            $output .= '<a href="' . $img[0] . '">';
+        } elseif ( ! empty( $meta_link ) ) {
             $output .= '<a href="' . $meta_link . '">';
         }
 
@@ -73,7 +78,7 @@ function owl_carousel_post_gallery( $output, $attr ) {
             padding-top:' . $img[2] / $img[1] * 100 . '%;
             "></div>';
 
-        if ( ! empty( $meta_link ) ) {
+        if ( $link || ! empty( $meta_link ) || $fullscreen ) {
             $output .= '</a>';
         }
 
@@ -81,6 +86,7 @@ function owl_carousel_post_gallery( $output, $attr ) {
     }
 
     $output .= '</div>';
+    $output .= '<div class="fullscreen-close"><i class="fa fa-times"></i></div>';
 
     return $output;
 }
