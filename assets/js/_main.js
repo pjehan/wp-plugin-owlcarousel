@@ -44,15 +44,37 @@ jQuery( document ).ready( function( $ ) {
     }
 
     /**
+     * Add slides orientation for gallery
+     */
+    var slides = $( '.owl-carousel .item .image' );
+
+ 	slides.each( function() {
+        var img = new Image;
+        img.src = $( this ).css( 'background-image' ).replace( /url\(|\)|'|"/g, '' );
+        var ratio = img.height / img.width;
+
+        if ( ratio > 1 ) {
+ 			$( this ).addClass( 'portrait' );
+            $( this ).css( 'width', img.width );
+ 		} else if ( ratio === 1 ) {
+ 			$( this ).addClass( 'square' );
+            $( this ).css( 'width', img.width );
+ 		} else if ( ratio < 1 ) {
+ 			$( this ).addClass( 'landscape' );
+            $( this ).css( 'width', img.width / ratio );
+ 		}
+ 	} );
+
+    /**
      * Fullscreen slides
      */
-    $( '.owl-carousel .item a' ).on( 'click', function(e) {
+    $( '.owl-carousel.fullscreen .item a' ).on( 'click', function(e) {
 		e.preventDefault();
 		screenfull.request();
-		$( 'body' ).addClass( 'carousel-fullscreen' );
+		$( 'body' ).addClass( 'gallery-fullscreen' );
 	} );
 
-	$( '.property .close' ).on( 'click', function() {
+	$( '.fullscreen-close' ).on( 'click', function() {
 		exitSliderFullscreen( ! screenfull.isFullscreen );
 	} );
 
@@ -63,7 +85,7 @@ jQuery( document ).ready( function( $ ) {
 	function exitSliderFullscreen( isFullscreen ) {
 		if( ! isFullscreen ) {
         	screenfull.exit();
-			$( 'body' ).removeClass( 'carousel-fullscreen' );
+			$( 'body' ).removeClass( 'gallery-fullscreen' );
 		}
 	}
 } );
