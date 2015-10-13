@@ -42,6 +42,7 @@ gulp.task( 'sass', function() {
  */
 gulp.task('javascripts', function(){
 	gulp.src([
+		'bower_components/screenfull/dist/screenfull.js',   // Gets Fullscreen
 		// 'bower_components/fastclick/lib/fastclick.js',	// Gets fastclick
 		// 'bower_components/svgeezy/svgeezy.js',         	// Gets svgeezy
 		// 'bower_components/modernizr/modernizr.js',		// Gets modernizr

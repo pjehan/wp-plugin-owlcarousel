@@ -29,7 +29,7 @@ function owl_carousel_post_gallery( $output, $attr ) {
     // owl_custom_default_atts filter
     $attr = apply_filters( 'owl_custom_default_atts', $attr, array() );
 
-    $data_attr = "";
+    $data_attr = '';
 
     foreach ( $attr as $key => $value ) {
         if ( $key != 'category' ) {
@@ -53,11 +53,12 @@ function owl_carousel_post_gallery( $output, $attr ) {
         $meta_link = get_post_meta( $id, '_owlurl', true );
         $title = $attachment->post_title;
         $caption = $attachment->post_excerpt;
+        $fullscreen = get_option( 'owl_carousel_fullscreen', false );
 
 
         $output .= '<div class="item">';
 
-        if ( $link ) {
+        if ( $link || $fullscreen ) {
             $output .= '<a href="' . $img[0] . '">';
         } elseif ( ! empty( $meta_link ) ) {
             $output .= '<a href="' . $meta_link . '">';
@@ -76,9 +77,7 @@ function owl_carousel_post_gallery( $output, $attr ) {
             padding-top:' . $img[2] / $img[1] * 100 . '%;
             "></div>';
 
-        if ( $link ) {
-            $output .= '</a>';
-        } elseif ( ! empty( $meta_link ) ) {
+        if ( $link || ! empty( $meta_link ) || $fullscreen ) {
             $output .= '</a>';
         }
 

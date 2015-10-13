@@ -43,6 +43,29 @@ jQuery( document ).ready( function( $ ) {
         } );
     }
 
+    /**
+     * Fullscreen slides
+     */
+    $( '.owl-carousel .item a' ).on( 'click', function(e) {
+		e.preventDefault();
+		screenfull.request();
+		$( 'body' ).addClass( 'carousel-fullscreen' );
+	} );
+
+	$( '.property .close' ).on( 'click', function() {
+		exitSliderFullscreen( ! screenfull.isFullscreen );
+	} );
+
+	$( document ).on( screenfull.raw.fullscreenchange, function () {
+		exitSliderFullscreen( screenfull.isFullscreen );
+    } );
+
+	function exitSliderFullscreen( isFullscreen ) {
+		if( ! isFullscreen ) {
+        	screenfull.exit();
+			$( 'body' ).removeClass( 'carousel-fullscreen' );
+		}
+	}
 } );
 
 /**

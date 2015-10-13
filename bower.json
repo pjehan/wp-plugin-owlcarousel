@@ -1,0 +1,19 @@
+{
+  "name": "owl-carousel",
+  "version": "2.2.5",
+  "authors": [
+    "Rasmus Taarnby <rt@peytz.dk>",
+    "Kristoffe Biglete <krb@peytz.dk>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "screenfull": "~2.0.0"
+  }
+}
