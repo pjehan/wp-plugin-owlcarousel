@@ -1,0 +1,95 @@
+.gallery-fullscreen {
+	& {
+		overflow: hidden !important;
+		background-color: #000;
+	}
+
+	#header,
+	#footer,
+	#sidebar,
+	#comments,
+	.post-header,
+	.post-image-wrap {
+		display: none;
+	}
+
+	#container,
+	.owl-carousel,
+	.post-column,
+	.post-content,
+	.article {
+		width: 100% !important;
+		height: 100% !important;
+		padding: 0 !important;
+		margin: 0 !important;
+	}
+
+	#content {
+		min-height: 100%;
+		min-height: 100vh;
+	}
+
+	.wrap {
+		max-width: 100% !important;
+	}
+
+	.owl-carousel {
+		width: 100% !important;
+
+		.item {
+			background-color: #000;
+			text-align: center;
+			height: 100%;
+			height: 100vh;
+			position: relative;
+
+			.image {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 50%;
+				transform: translate( 0, -50% ); // IE9
+				transform: translate3d( 0, -50%, 0 ); // Modern Browsers - better performance
+				margin: 0 auto;
+				max-height: 100%;
+				max-width: 100%;
+				height: 100% !important;
+			}
+		}
+
+		.owl-nav {
+			top: 30%;
+
+			div {
+				&::before, &::after {
+					font-size: 5rem;
+				}
+			}
+		}
+	}
+	.fullscreen-close {
+		display: block;
+		position: absolute;
+		top: 0;
+		right: 0;
+		font-size: 2.25rem;
+		color: #FFF;
+		background-color: #000;
+		padding: 1.4rem 1.25rem;
+		z-index: 999999;
+
+		&:hover {
+			cursor: pointer;
+		}
+
+		@media only screen and (max-width: 40em) {
+			font-size: 1.5rem;
+			padding: 1rem;
+		}
+	}
+
+	&.page .article {
+		margin: 0;
+		background-color: #000;
+	}
+}
