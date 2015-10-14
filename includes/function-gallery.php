@@ -29,7 +29,7 @@ function owl_carousel_post_gallery( $output, $attr ) {
     // owl_custom_default_atts filter
     $attr = apply_filters( 'owl_custom_default_atts', $attr, array() );
 
-    $data_attr = "";
+    $data_attr = '';
 
     foreach ( $attr as $key => $value ) {
         if ( $key != 'category' ) {
@@ -40,8 +40,11 @@ function owl_carousel_post_gallery( $output, $attr ) {
         }
     }
 
+    // Fullscreen
+    $fullscreen = get_option( 'owl_carousel_fullscreen', false );
+
     // Start the output
-    $output .= '<div id="owl-carousel-' . rand() . '" class="owl-carousel-plugin" ' . $data_attr . '>';
+    $output .= '<div id="owl-carousel-' . rand() . '" class="owl-carousel-plugin ' . ( ( $fullscreen ) ? 'fullscreen' : '' ) . '" ' . $data_attr . '>';
 
     foreach ( $attachments as $id => $attachment ) {
 
@@ -54,10 +57,9 @@ function owl_carousel_post_gallery( $output, $attr ) {
         $title = $attachment->post_title;
         $caption = $attachment->post_excerpt;
 
-
         $output .= '<div class="item">';
 
-        if ( $link ) {
+        if ( $link || $fullscreen ) {
             $output .= '<a href="' . $img[0] . '">';
         } elseif ( ! empty( $meta_link ) ) {
             $output .= '<a href="' . $meta_link . '">';
@@ -76,9 +78,7 @@ function owl_carousel_post_gallery( $output, $attr ) {
             padding-top:' . $img[2] / $img[1] * 100 . '%;
             "></div>';
 
-        if ( $link ) {
-            $output .= '</a>';
-        } elseif ( ! empty( $meta_link ) ) {
+        if ( $link || ! empty( $meta_link ) || $fullscreen ) {
             $output .= '</a>';
         }
 
@@ -86,6 +86,7 @@ function owl_carousel_post_gallery( $output, $attr ) {
     }
 
     $output .= '</div>';
+    $output .= '<div class="fullscreen-close"><i class="fa fa-times"></i></div>';
 
     return $output;
 }

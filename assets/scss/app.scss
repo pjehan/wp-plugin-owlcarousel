@@ -1,10 +1,12 @@
-.owl-carousel{
+@import "fullscreen";
+
+.owl-carousel {
 	position: relative;
 	overflow-x: hidden;
 	background: rgba( 0, 0, 0, 0.05 );
 
-	.item{
-		.image{
+	.item {
+		.image {
 			background-size: cover;
 			margin: auto;
 			background-repeat: no-repeat;
@@ -21,7 +23,7 @@
 			}
 		}
 
-		img{
+		img {
 			width: 100%;
 		}
 
@@ -33,8 +35,8 @@
 			font-size: 0.8rem;
 		}
 
-		&:hover{
-			.owl-item-overlay{
+		&:hover {
+			.owl-item-overlay {
 				// opacity: 1;
 				// background-color: rgba(0, 0, 0, 0.3);
 			}
@@ -71,12 +73,12 @@
 		}
 	}
 
-	.owl-controls{
+	.owl-controls {
 		margin-top: 0;
 		width: 100%;
 		overflow: hidden;
 
-		.owl-dots{
+		.owl-dots {
 			text-align: center;
 			margin-top: 10px;
 			position: absolute;
@@ -84,12 +86,12 @@
 			left: 50%;
 			width: 100%;
 
-		    .owl-dot{
+		    .owl-dot {
 				display: inline-block;
 				position: relative;
 				left: -50%;
 
-			    span{
+			    span {
 				    width: 10px;
 					height: 10px;
 					margin: 5px 3px;
@@ -105,8 +107,8 @@
 					-moz-border-radius: 30px;
 					border-radius: 30px;
 			    }
-				&.active{
-					span{
+				&.active {
+					span {
 						background: #869791;
 					}
 				}
@@ -141,4 +143,8 @@
 			max-height: 100%;
 		}
 	}
+}
+
+.fullscreen-close {
+	display: none;
 }
