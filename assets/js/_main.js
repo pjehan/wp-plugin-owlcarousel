@@ -54,16 +54,16 @@ jQuery( document ).ready( function( $ ) {
         var ratio = img.height / img.width;
 
         if ( ratio > 1 ) {
- 			$( this ).addClass( 'portrait' );
+            $( this ).addClass( 'portrait' );
             $( this ).css( 'width', img.width );
- 		} else if ( ratio === 1 ) {
- 			$( this ).addClass( 'square' );
+        } else if ( ratio === 1 ) {
+            $( this ).addClass( 'square' );
             $( this ).css( 'width', img.width );
- 		} else if ( ratio < 1 ) {
- 			$( this ).addClass( 'landscape' );
+        } else if ( ratio < 1 ) {
+            $( this ).addClass( 'landscape' );
             $( this ).css( 'width', img.width / ratio );
- 		}
- 	} );
+        }
+    } );
 
     /**
      * Fullscreen slides
