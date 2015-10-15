@@ -35,6 +35,9 @@
 
 	.owl-carousel {
 		width: 100% !important;
+		position: absolute;
+		top: 0;
+		left: 0;
 
 		.item {
 			background-color: #000;

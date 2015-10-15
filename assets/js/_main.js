@@ -52,6 +52,7 @@ jQuery( document ).ready( function( $ ) {
         var img = new Image;
         img.src = $( this ).css( 'background-image' ).replace( /url\(|\)|'|"/g, '' );
         var ratio = img.height / img.width;
+        console.log(img);
 
         if ( ratio > 1 ) {
  			$( this ).addClass( 'portrait' );
