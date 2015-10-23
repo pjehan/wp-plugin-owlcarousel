@@ -35,7 +35,7 @@
 
 	.owl-carousel {
 		width: 100% !important;
-		position: absolute;
+		position: fixed;
 		top: 0;
 		left: 0;
 
@@ -80,7 +80,7 @@
 
 	.fullscreen-close {
 		display: block;
-		position: absolute;
+		position: fixed;
 		top: 0;
 		right: 0;
 		font-size: 2.25rem;
