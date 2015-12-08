@@ -4,7 +4,7 @@ Plugin Name: Owl Carousel
 Description: A simple plugin to include an Owl Carousel in any post
 Author:  Peytz & Co (Rasmus Taarnby, Kristoffe Biglete)
 Contributors: Rasmus Taarnby
-Version: 2.0.2
+Version: 2.3.6
 Text Domain: owl-carousel
 Domain Path: /languages
 Author URI: http://peytz.dk/medarbejdere/
