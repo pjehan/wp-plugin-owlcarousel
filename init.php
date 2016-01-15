@@ -99,10 +99,9 @@ class Main {
 } // end class
 
 /**
- * Returns the main instance
+ * Instantiate the plugin
  */
 function main() {
-	return Main::instance();;
+	return Main::instance();
 }
-
-main();
+add_action( 'plugins_loaded', __NAMESPACE__ . '\main' );
