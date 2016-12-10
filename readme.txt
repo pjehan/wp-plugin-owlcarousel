@@ -1,7 +1,7 @@
 === Owl Carousel ===
 Contributors: Pierre Jehan
 Tags: carousel, slideshow, slider, gallery, images, photos, responsive
-Tested up to: 4.5.2
+Tested up to: 4.7
 License: GPL2
 License URI: http://opensource.org/licenses/MIT
 
