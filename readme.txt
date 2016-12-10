@@ -71,6 +71,7 @@ Paste the link in the "Owl Carousel URL" field when you choose the slide picture
 = 0.5.3 =
 * Fix line break in image description (thanks to simplemachines for spotting this bug)
 * Restore original Post Data after custom loop (thanks to pratham2003 for spotting this bug)
+* Add a css class on each carousel (owl-carousel-[category-name])
 
 = 0.5.2 =
 * Fix typo with itemsDesktopSmall option (thanks to maxdamage80 for spotting this bug)

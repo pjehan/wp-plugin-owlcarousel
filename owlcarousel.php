@@ -329,7 +329,7 @@ function owl_function($atts, $content = null) {
         'nopaging' => true
     );
 
-    $result = '<div id="owl-carousel-' . rand() . '" class="owl-carousel" ' . $data_attr . '>';
+    $result = '<div id="owl-carousel-' . rand() . '" class="owl-carousel owl-carousel-' . sanitize_title($atts['category']) . '" ' . $data_attr . '>';
 
     $loop = new WP_Query($args);
     while ($loop->have_posts()) {
