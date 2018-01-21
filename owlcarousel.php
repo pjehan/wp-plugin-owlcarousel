@@ -206,7 +206,7 @@ class WP_OwlCarousel {
     }
     
     function admin_menu(){
-        add_submenu_page(sprintf('edit.php?post_type=%s',$this->slide_post_type), __('Parameters', 'wp-owlc'), __('Parameters', 'wp-owlc'), 'manage_options', 'owl-carousel-parameters', array($this,'settings_page'));
+        add_submenu_page(sprintf('edit.php?post_type=%s',$this->slide_post_type), __('Settings'), __('Settings'), 'manage_options', 'owl-carousel-parameters', array($this,'settings_page'));
     }
     
     function settings_page() {
