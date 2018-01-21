@@ -114,7 +114,7 @@ class OwlCarousel {
             'publicly_queryable' => false,
             'exclude_from_search' => true,
             'label' => 'Owl Carousel',
-            'menu_icon' => $this->plugin_url . 'images/owl-logo-16.png',
+            'menu_icon' => $this->plugin_url . '_inc/images/owl-logo-16.png',
             'labels' => $labels,
             'capability_type' => 'post',
             'supports' => array(
@@ -205,11 +205,11 @@ class OwlCarousel {
      */
     function admin_scripts_styles() {
         //CSS
-        wp_register_style('wp-owlc-admin', $this->plugin_url . 'css/wp-owlc-admin.css',null,$this->version);
+        wp_register_style('wp-owlc-admin', $this->plugin_url . '_inc/css/wp-owlc-admin.css',null,$this->version);
         wp_enqueue_style('wp-owlc-admin');
 
         //JS
-        wp_register_script('wp-owlc-admin', $this->plugin_url . 'js/wp-owlc-admin.js',array('jquery'),$this->version);
+        wp_register_script('wp-owlc-admin', $this->plugin_url . '_inc/js/wp-owlc-admin.js',array('jquery'),$this->version);
         wp_enqueue_script('wp-owlc-admin');
     }
     /**
@@ -217,19 +217,19 @@ class OwlCarousel {
      */
     function scripts_styles() {
         //CSS
-        wp_register_style('owlcarousel', $this->plugin_url . 'css/owl.carousel.css');
-        wp_register_style('owlcarousel-theme', $this->plugin_url . 'css/owl.theme.css');
-        wp_register_style('owlcarousel-transitions', $this->plugin_url . 'css/owl.transitions.css');
-        wp_register_style('wp-owlc', $this->plugin_url . 'css/wp-owlc.css',array('owlcarousel','owlcarousel-theme','owlcarousel-transitions'),$this->version);
+        wp_register_style('owlcarousel', $this->plugin_url . '_inc/css/owl.carousel.css');
+        wp_register_style('owlcarousel-theme', $this->plugin_url . '_inc/css/owl.theme.css');
+        wp_register_style('owlcarousel-transitions', $this->plugin_url . '_inc/css/owl.transitions.css');
+        wp_register_style('wp-owlc', $this->plugin_url . '_inc/css/wp-owlc.css',array('owlcarousel','owlcarousel-theme','owlcarousel-transitions'),$this->version);
         wp_enqueue_style('wp-owlc');
         
         //JS
-        wp_register_script('jquery.owlcarousel', $this->plugin_url . 'js/owl.carousel.js',array('jquery'),'1.3.2',true);
-        wp_register_script('wp-owlc', $this->plugin_url . 'js/wp-owlc.js',array('jquery','jquery.owlcarousel'),$this->version,true);
+        wp_register_script('jquery.owlcarousel', $this->plugin_url . '_inc/js/owl.carousel.js',array('jquery'),'1.3.2',true);
+        wp_register_script('wp-owlc', $this->plugin_url . '_inc/js/wp-owlc.js',array('jquery','jquery.owlcarousel'),$this->version,true);
         wp_enqueue_script('wp-owlc');
     }
     function tinymce_register_plugin($plugin_array) {
-        $plugin_array['owl_button'] = $this->plugin_url . 'js/owl-tinymce-plugin.js';
+        $plugin_array['owl_button'] = $this->plugin_url . '_inc/js/owl-tinymce-plugin.js';
         return $plugin_array;
     }
     function tinymce_add_button($buttons) {
