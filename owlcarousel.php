@@ -17,7 +17,7 @@ class OwlCarousel {
     /**
     * @public string plugin DB version
     */
-    public $db_version = '053';
+    public $db_version = 053;
     /** Paths *****************************************************************/
     public $file = '';
     /**
@@ -74,6 +74,8 @@ class OwlCarousel {
     }
     function setup_actions(){
         add_theme_support('post-thumbnails');
+        
+        add_action( 'plugins_loaded', array($this, 'upgrade'));
 
         add_action('init', array($this,'init'));
         add_action('wp_enqueue_scripts', array($this,'scripts_styles'));
@@ -91,6 +93,30 @@ class OwlCarousel {
         add_filter("attachment_fields_to_edit", array($this,'attachment_fields_to_edit'), null, 2);
         add_filter("attachment_fields_to_save", array($this,'attachment_fields_to_save'), null, 2);
     }
+    
+    function upgrade(){
+        global $wpdb;
+
+        $current_version = get_option("_wp-owlc-db_version");
+
+        if ($current_version==$this->db_version) return false;
+        if(!$current_version){ //install
+
+            
+
+        }else{ //upgrade
+
+            /*
+            if ($current_version < 053){
+            }
+            */
+
+        }
+        
+        //update DB version
+        update_option("_wp-owlc-db_version", $this->db_version );
+    }
+    
     /**
      * Initilize the plugin
      */
