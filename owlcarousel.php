@@ -205,35 +205,28 @@ class OwlCarousel {
      */
     function admin_scripts_styles() {
         //CSS
-        wp_register_style('owl.carousel.admin.styles', $this->plugin_url . 'css/admin_styles.css');
-        wp_enqueue_style('owl.carousel.admin.styles');
+        wp_register_style('wp-owlc-admin', $this->plugin_url . 'css/wp-owlc-admin.css',null,$this->version);
+        wp_enqueue_style('wp-owlc-admin');
 
         //JS
-        wp_register_script('owl.carousel.admin.script', $this->plugin_url . 'js/admin_script.js');
-        wp_enqueue_script('owl.carousel.admin.script');
+        wp_register_script('wp-owlc-admin', $this->plugin_url . 'js/wp-owlc-admin.js',array('jquery'),$this->version);
+        wp_enqueue_script('wp-owlc-admin');
     }
     /**
      * List of JavaScript / CSS files for frontend
      */
     function scripts_styles() {
         //CSS
-        wp_register_style('style.owl.carousel', $this->plugin_url . 'css/owl.carousel.css');
-        wp_register_style('style.owl.carousel.theme', $this->plugin_url . 'css/owl.theme.css');
-        wp_register_style('style.owl.carousel.transitions', $this->plugin_url . 'css/owl.transitions.css');
-        wp_register_style('style.owl.carousel.styles', $this->plugin_url . 'css/styles.css');
-
-        wp_enqueue_style('style.owl.carousel');
-        wp_enqueue_style('style.owl.carousel.theme');
-        wp_enqueue_style('style.owl.carousel.transitions');
-        wp_enqueue_style('style.owl.carousel.styles');
+        wp_register_style('owlcarousel', $this->plugin_url . 'css/owl.carousel.css');
+        wp_register_style('owlcarousel-theme', $this->plugin_url . 'css/owl.theme.css');
+        wp_register_style('owlcarousel-transitions', $this->plugin_url . 'css/owl.transitions.css');
+        wp_register_style('wp-owlc', $this->plugin_url . 'css/wp-owlc.css',array('owlcarousel','owlcarousel-theme','owlcarousel-transitions'),$this->version);
+        wp_enqueue_style('wp-owlc');
         
         //JS
-        wp_register_script('js.owl.carousel', $this->plugin_url . 'js/owl.carousel.js');
-        wp_register_script('js.owl.carousel.script', $this->plugin_url . 'js/script.js');
-
-        wp_enqueue_script('jquery');
-        wp_enqueue_script('js.owl.carousel');
-        wp_enqueue_script('js.owl.carousel.script');
+        wp_register_script('jquery.owlcarousel', $this->plugin_url . 'js/owl.carousel.js',array('jquery'),'1.3.2',true);
+        wp_register_script('wp-owlc', $this->plugin_url . 'js/wp-owlc.js',array('jquery','jquery.owlcarousel'),$this->version,true);
+        wp_enqueue_script('wp-owlc');
     }
     function tinymce_register_plugin($plugin_array) {
         $plugin_array['owl_button'] = $this->plugin_url . 'js/owl-tinymce-plugin.js';
