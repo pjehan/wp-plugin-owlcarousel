@@ -7,10 +7,10 @@ jQuery(document).ready(function($) {
                 content = '[owl-carousel category="Uncategorized" singleItem="true" autoPlay="true"]';
                 tinymce.execCommand('mceInsertContent', false, content);
             });
-            ed.addButton('owl_button', {title: 'Insert shortcode', cmd: 'owl_insert_shortcode', image: url + '/../images/owl-logo-16.png'});
+            ed.addButton('wp_owlc_bt', {title: 'Insert shortcode', cmd: 'owl_insert_shortcode', image: url + '/../images/owl-logo-16.png'});
         }
     });
     
-    tinymce.PluginManager.add('owl_button', tinymce.plugins.owl_plugin);
+    tinymce.PluginManager.add('wp_owlc_bt', tinymce.plugins.owl_plugin);
 
 });
