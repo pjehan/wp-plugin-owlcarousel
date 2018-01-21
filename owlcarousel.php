@@ -85,6 +85,7 @@ class OwlCarousel {
         add_action('manage_posts_custom_column', array($this,'admin_columns_content'));
         add_action('admin_menu', array($this,'admin_menu'));
         add_action('admin_enqueue_scripts', array($this,'admin_scripts_styles'));
+        add_action( 'after_setup_theme', array($this,'theme_setup'));
 
         if (filter_var(get_option('owl_carousel_wordpress_gallery', false), FILTER_VALIDATE_BOOLEAN)) {
             add_filter('post_gallery', array($this,'handle_gallery'), 10, 2);
@@ -93,6 +94,8 @@ class OwlCarousel {
         // Add functions to create a new attachments fields
         add_filter("attachment_fields_to_edit", array($this,'attachment_fields_to_edit'), null, 2);
         add_filter("attachment_fields_to_save", array($this,'attachment_fields_to_save'), null, 2);
+        add_filter("mce_external_plugins", array($this,"tinymce_register_plugin"));
+        add_filter('mce_buttons', array($this,"tinymce_add_button"));
     }
     
     function load_textdomain() {
@@ -122,6 +125,11 @@ class OwlCarousel {
         update_option("_wp-owlc-db_version", $this->db_version );
     }
     
+    function theme_setup(){
+        add_image_size('owl_widget', 180, 100, true);
+        add_image_size('owl_function', 600, 280, true);
+    }
+    
     /**
      * Initilize the plugin
      */
@@ -130,13 +138,7 @@ class OwlCarousel {
         $this->register_slide_post_type();
         $this->register_carousel_taxonomy();
 
-
-        add_image_size('owl_widget', 180, 100, true);
-        add_image_size('owl_function', 600, 280, true);
-
         add_shortcode('owl-carousel', array($this,'register_shortcode') );
-        add_filter("mce_external_plugins", array($this,"tinymce_register_plugin"));
-        add_filter('mce_buttons', array($this,"tinymce_add_button"));
 
         // Add Wordpress Gallery option
         add_option('owl_carousel_wordpress_gallery', 'off');
