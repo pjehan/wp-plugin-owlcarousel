@@ -35,8 +35,8 @@ class OwlCarousel {
     private static $instance;
 
     public $meta_name_options = 'owlc_options';
-    
-    var $menu_page;
+    public $slide_post_type = 'owl-carousel';
+    public $carousel_taxonomy = 'Carousel';
 
     public static function instance() {
         
@@ -81,7 +81,7 @@ class OwlCarousel {
         add_action('init', array($this,'init'));
         add_action('wp_enqueue_scripts', array($this,'scripts_styles'));
         add_action('widgets_init', array($this,'widget_init'));
-        add_action('manage_edit-owl-carousel_columns', array($this,'admin_columns_register'));
+        add_action( sprintf('manage_edit-%s_columns',$this->slide_post_type), array($this,'admin_columns_register'));
         add_action('manage_posts_custom_column', array($this,'admin_columns_content'));
         add_action('admin_menu', array($this,'admin_menu'));
         add_action('admin_enqueue_scripts', array($this,'admin_scripts_styles'));
@@ -126,7 +126,24 @@ class OwlCarousel {
      * Initilize the plugin
      */
     function init() {
+        
+        $this->register_slide_post_type();
+        $this->register_carousel_taxonomy();
 
+
+        add_image_size('owl_widget', 180, 100, true);
+        add_image_size('owl_function', 600, 280, true);
+
+        add_shortcode('owl-carousel', array($this,'register_shortcode') );
+        add_filter("mce_external_plugins", array($this,"tinymce_register_plugin"));
+        add_filter('mce_buttons', array($this,"tinymce_add_button"));
+
+        // Add Wordpress Gallery option
+        add_option('owl_carousel_wordpress_gallery', 'off');
+        add_option('owl_carousel_orderby', 'post_date');
+    }
+    
+    function register_slide_post_type(){
         $labels = array(
             'name' => __('Owl Carousel', 'wp-owlc'),
             'singular_name' => __('Carousel Slide', 'wp-owlc'),
@@ -140,7 +157,7 @@ class OwlCarousel {
             'not_found_in_trash' => __('No carousel slides found in trash', 'wp-owlc'),
         );
 
-        register_post_type('owl-carousel', array(
+        register_post_type($this->slide_post_type, array(
             'public' => true,
             'publicly_queryable' => false,
             'exclude_from_search' => true,
@@ -154,7 +171,9 @@ class OwlCarousel {
                 'thumbnail'
             )
         ));
-
+    }
+    
+    function register_carousel_taxonomy(){
         $taxonomy_labels = array(
             'name' => __('Carousels', 'wp-owlc'),
             'singular_name' => __('Carousel', 'wp-owlc'),
@@ -174,27 +193,16 @@ class OwlCarousel {
             'menu_name' => __('Carousels', 'wp-owlc'),
         );
 
-        register_taxonomy('Carousel', 'owl-carousel', array(
+        register_taxonomy($this->carousel_taxonomy,$this->slide_post_type, array(
             'labels' => $taxonomy_labels,
             'rewrite' => array('slug' => 'carousel'),
             'hierarchical' => true,
             'show_admin_column' => true,
         ));
-
-        add_image_size('owl_widget', 180, 100, true);
-        add_image_size('owl_function', 600, 280, true);
-
-        add_shortcode('owl-carousel', array($this,'register_shortcode') );
-        add_filter("mce_external_plugins", array($this,"tinymce_register_plugin"));
-        add_filter('mce_buttons', array($this,"tinymce_add_button"));
-
-        // Add Wordpress Gallery option
-        add_option('owl_carousel_wordpress_gallery', 'off');
-        add_option('owl_carousel_orderby', 'post_date');
     }
     
     function admin_menu(){
-        add_submenu_page('edit.php?post_type=owl-carousel', __('Parameters', 'wp-owlc'), __('Parameters', 'wp-owlc'), 'manage_options', 'owl-carousel-parameters', array($this,'settings_page'));
+        add_submenu_page(sprintf('edit.php?post_type=%s',$this->slide_post_type), __('Parameters', 'wp-owlc'), __('Parameters', 'wp-owlc'), 'manage_options', 'owl-carousel-parameters', array($this,'settings_page'));
     }
     
     function settings_page() {
@@ -351,12 +359,12 @@ class OwlCarousel {
         $lazyLoad = array_key_exists("lazyload", $atts) && $atts["lazyload"] == true;
 
         $args = array(
-            'post_type' => 'owl-carousel',
+            'post_type' => $this->slide_post_type,
             'orderby' => get_option('owl_carousel_orderby', 'post_date'),
             'order' => 'asc',
             'tax_query' => array(
                 array(
-                    'taxonomy' => 'Carousel',
+                    'taxonomy' => $this->carousel_taxonomy,
                     'field' => 'slug',
                     'terms' => $atts['category']
                 )
