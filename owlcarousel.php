@@ -76,6 +76,7 @@ class OwlCarousel {
         add_theme_support('post-thumbnails');
         
         add_action( 'plugins_loaded', array($this, 'upgrade'));
+        add_action( 'admin_init', array($this,'load_textdomain'));
 
         add_action('init', array($this,'init'));
         add_action('wp_enqueue_scripts', array($this,'scripts_styles'));
@@ -92,6 +93,10 @@ class OwlCarousel {
         // Add functions to create a new attachments fields
         add_filter("attachment_fields_to_edit", array($this,'attachment_fields_to_edit'), null, 2);
         add_filter("attachment_fields_to_save", array($this,'attachment_fields_to_save'), null, 2);
+    }
+    
+    function load_textdomain() {
+        load_plugin_textdomain( 'wp-owlc', false, $this->plugin_dir . '/languages' );
     }
     
     function upgrade(){
