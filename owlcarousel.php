@@ -76,7 +76,7 @@ class OwlCarousel {
         add_theme_support('post-thumbnails');
 
         add_action('init', array($this,'init'));
-        add_action('wp_enqueue_scripts', 'scripts_styles');
+        add_action('wp_enqueue_scripts', array($this,'scripts_styles'));
         add_action('widgets_init', array($this,'widget_init'));
         add_action('manage_edit-owl-carousel_columns', array($this,'admin_columns_register'));
         add_action('manage_posts_custom_column', array($this,'admin_columns_content'));
