@@ -97,16 +97,16 @@ class OwlCarousel {
     function init() {
 
         $labels = array(
-            'name' => __('Owl Carousel', 'owl-carousel-domain'),
-            'singular_name' => __('Carousel Slide', 'owl-carousel-domain'),
-            'add_new' => __('Add New Slide', 'owl-carousel-domain'),
-            'add_new_item' => __('Add New Carousel Slide', 'owl-carousel-domain'),
-            'edit_item' => __('Edit Carousel Slide', 'owl-carousel-domain'),
-            'new_item' => __('Add New Carousel Slide', 'owl-carousel-domain'),
-            'view_item' => __('View Slide', 'owl-carousel-domain'),
-            'search_items' => __('Search Carousel', 'owl-carousel-domain'),
-            'not_found' => __('No carousel slides found', 'owl-carousel-domain'),
-            'not_found_in_trash' => __('No carousel slides found in trash', 'owl-carousel-domain'),
+            'name' => __('Owl Carousel', 'wp-owlc'),
+            'singular_name' => __('Carousel Slide', 'wp-owlc'),
+            'add_new' => __('Add New Slide', 'wp-owlc'),
+            'add_new_item' => __('Add New Carousel Slide', 'wp-owlc'),
+            'edit_item' => __('Edit Carousel Slide', 'wp-owlc'),
+            'new_item' => __('Add New Carousel Slide', 'wp-owlc'),
+            'view_item' => __('View Slide', 'wp-owlc'),
+            'search_items' => __('Search Carousel', 'wp-owlc'),
+            'not_found' => __('No carousel slides found', 'wp-owlc'),
+            'not_found_in_trash' => __('No carousel slides found in trash', 'wp-owlc'),
         );
 
         register_post_type('owl-carousel', array(
@@ -125,22 +125,22 @@ class OwlCarousel {
         ));
 
         $taxonomy_labels = array(
-            'name' => __('Carousels', 'owl-carousel-domain'),
-            'singular_name' => __('Carousel', 'owl-carousel-domain'),
-            'search_items' => __('Search Carousels', 'owl-carousel-domain'),
-            'popular_items' => __('Popular Carousels', 'owl-carousel-domain'),
-            'all_items' => __('All Carousels', 'owl-carousel-domain'),
+            'name' => __('Carousels', 'wp-owlc'),
+            'singular_name' => __('Carousel', 'wp-owlc'),
+            'search_items' => __('Search Carousels', 'wp-owlc'),
+            'popular_items' => __('Popular Carousels', 'wp-owlc'),
+            'all_items' => __('All Carousels', 'wp-owlc'),
             'parent_item' => null,
             'parent_item_colon' => null,
-            'edit_item' => __('Edit Carousel', 'owl-carousel-domain'),
-            'update_item' => __('Update Carousel', 'owl-carousel-domain'),
-            'add_new_item' => __('Add New Carousel', 'owl-carousel-domain'),
-            'new_item_name' => __('New Carousel Name', 'owl-carousel-domain'),
-            'separate_items_with_commas' => __('Separate carousels with commas', 'owl-carousel-domain'),
-            'add_or_remove_items' => __('Add or remove carousels', 'owl-carousel-domain'),
-            'choose_from_most_used' => __('Choose from the most used carousels', 'owl-carousel-domain'),
-            'not_found' => __('No carousels found.', 'owl-carousel-domain'),
-            'menu_name' => __('Carousels', 'owl-carousel-domain'),
+            'edit_item' => __('Edit Carousel', 'wp-owlc'),
+            'update_item' => __('Update Carousel', 'wp-owlc'),
+            'add_new_item' => __('Add New Carousel', 'wp-owlc'),
+            'new_item_name' => __('New Carousel Name', 'wp-owlc'),
+            'separate_items_with_commas' => __('Separate carousels with commas', 'wp-owlc'),
+            'add_or_remove_items' => __('Add or remove carousels', 'wp-owlc'),
+            'choose_from_most_used' => __('Choose from the most used carousels', 'wp-owlc'),
+            'not_found' => __('No carousels found.', 'wp-owlc'),
+            'menu_name' => __('Carousels', 'wp-owlc'),
         );
 
         register_taxonomy('Carousel', 'owl-carousel', array(
@@ -163,7 +163,7 @@ class OwlCarousel {
     }
     
     function admin_menu(){
-        add_submenu_page('edit.php?post_type=owl-carousel', __('Parameters', 'owl-carousel-domain'), __('Parameters', 'owl-carousel-domain'), 'manage_options', 'owl-carousel-parameters', array($this,'settings_page'));
+        add_submenu_page('edit.php?post_type=owl-carousel', __('Parameters', 'wp-owlc'), __('Parameters', 'wp-owlc'), 'manage_options', 'owl-carousel-parameters', array($this,'settings_page'));
     }
     
     function settings_page() {
@@ -176,15 +176,15 @@ class OwlCarousel {
 
         echo '<?php update_option("owl_carousel_wordpress_gallery", $_POST["wordpress_gallery"]); ?>';
 
-        echo '<h2>' . __('Owl Carousel parameters', 'owl-carousel-domain') . '</h2>';
+        echo '<h2>' . __('Owl Carousel parameters', 'wp-owlc') . '</h2>';
 
         echo '<form action="' . $this->plugin_url . 'save_parameter.php" method="POST" id="owlcarouselparameterform">';
 
-        echo '<h3>' . __('Wordpress Gallery', 'owl-carousel-domain') . '</h3>';
+        echo '<h3>' . __('Wordpress Gallery', 'wp-owlc') . '</h3>';
         echo '<input type="checkbox" name="wordpress_gallery" ' . $isWordpressGallery . ' />';
-        echo '<label>' . __('Use Owl Carousel with Wordpress Gallery', 'owl-carousel-domain') . '</label>';
+        echo '<label>' . __('Use Owl Carousel with Wordpress Gallery', 'wp-owlc') . '</label>';
         echo '<br />';
-        echo '<label>' . __('Order Owl Carousel elements by ', 'owl-carousel-domain') . '</label>';
+        echo '<label>' . __('Order Owl Carousel elements by ', 'wp-owlc') . '</label>';
         echo '<select name="orderby" />';
         foreach ($orderByOptions as $option) {
             echo '<option value="' . $option . '" ' . (($option == $orderBy) ? 'selected="selected"' : '') . '>' . $option . '</option>';
@@ -192,7 +192,7 @@ class OwlCarousel {
         echo '</select>';
         echo '<br />';
         echo '<br />';
-        echo '<input type="submit" class="button-primary owl-carousel-save-parameter-btn" value="' . __('Save changes', 'owl-carousel-domain') . '" />';
+        echo '<input type="submit" class="button-primary owl-carousel-save-parameter-btn" value="' . __('Save changes', 'wp-owlc') . '" />';
         echo '<span class="spinner"></span>';
 
         echo '</form>';
@@ -210,7 +210,8 @@ class OwlCarousel {
 
         //JS
         wp_register_script('wp-owlc-admin', $this->plugin_url . '_inc/js/wp-owlc-admin.js',array('jquery'),$this->version);
-        wp_enqueue_script('wp-owlc-admin');
+
+        wp_enqueue_script('wp-owlc-admin');        
     }
     /**
      * List of JavaScript / CSS files for frontend
