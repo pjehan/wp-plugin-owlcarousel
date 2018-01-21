@@ -230,7 +230,7 @@ class OwlCarousel {
         wp_enqueue_script('wp-owlc');
     }
     function tinymce_register_plugin($plugin_array) {
-        $plugin_array['owl_button'] = $this->plugin_url . '_inc/js/owl-tinymce-plugin.js';
+        $plugin_array['owl_button'] = $this->plugin_url . '_inc/js/wp-owlc-tinymce.js';
         return $plugin_array;
     }
     function tinymce_add_button($buttons) {
